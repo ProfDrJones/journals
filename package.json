@@ -1,26 +1,25 @@
 {
-	"name": "calendar",
-	"description": "A calendar app for Nextcloud. Easily sync events from various devices, share and edit them online.",
-	"version": "2.0.2",
-	"author": "Georg Ehrke <oc.list@georgehrke.com>",
+	"name": "journals",
+	"description": "This app adds general vJournal support for Nextcloud and allows to create, edit and delete vJournal entries to the users calendars.",
+	"version": "0.0.1",
+	"author": "Johannes Szeibert <johannes@szeibert.de>",
 	"contributors": [
-		"Georg Ehrke <oc.list@georgehrke.com>",
-		"Thomas Citharel <tcit@tcit.fr>"
+		"Johannes Szeibert <johannes@szeibert.de>"
 	],
 	"keywords": [
 		"nextcloud",
-		"calendars",
-		"vevent",
+		"journals",
+		"vjournal",
 		"caldav"
 	],
 	"bugs": {
-		"url": "https://github.com/nextcloud/calendar/issues"
+		"url": "https://github.com/ProfDrJones/journals/issues"
 	},
 	"repository": {
-		"url": "https://github.com/nextcloud/calendar",
+		"url": "https://github.com/ProfDrJones/journals.git",
 		"type": "git"
 	},
-	"homepage": "https://github.com/nextcloud/calendar",
+	"homepage": "https://github.com/ProfDrJones/journals",
 	"license": "agpl",
 	"private": true,
 	"scripts": {

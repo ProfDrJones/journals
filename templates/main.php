@@ -1,6 +1,11 @@
 <?php
 /**
- * Calendar App
+ * Nextcloud - Journals
+ *
+ * @author Johannes Szeibert
+ *
+ * This is a modified version from Nextcloud - Calendar
+ * original by:
  *
  * @author Georg Ehrke
  * @copyright 2019 Georg Ehrke <oc.list@georgehrke.com>
@@ -19,5 +24,5 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-script('calendar', 'calendar');
-style('calendar', 'calendar');
+script('journals', 'journals');
+style('journals', 'journals');

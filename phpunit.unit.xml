@@ -5,7 +5,7 @@
          timeoutForMediumTests="900"
          timeoutForLargeTests="900"
 >
-    <testsuite name='Calendar app tests'>
+    <testsuite name='Journals app tests'>
         <directory suffix='test.php'>./tests/php/unit</directory>
         <directory suffix='Test.php'>./tests/php/unit</directory>
     </testsuite>

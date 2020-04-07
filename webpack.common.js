@@ -8,8 +8,8 @@ module.exports = {
 	output: {
 		path: path.resolve(__dirname, './js'),
 		publicPath: '/js/',
-		filename: 'calendar.js',
-		chunkFilename: 'chunks/calendar.[name].[contenthash].js'
+		filename: 'journals.js',
+		chunkFilename: 'chunks/journals.[name].[contenthash].js'
 	},
 	module: {
 		rules: [

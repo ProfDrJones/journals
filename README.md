@@ -1,68 +1,33 @@
-# Nextcloud Calendar 
+# Nextcloud Journals 
 
-[![Build Status](https://travis-ci.org/nextcloud/calendar.svg?branch=master)](https://travis-ci.org/nextcloud/calendar)
-[![Coverage Status](https://coveralls.io/repos/github/nextcloud/calendar/badge.svg?branch=master)](https://coveralls.io/github/nextcloud/calendar?branch=master)
+## The idea
 
-**A calendar app for [Nextcloud](http://nextcloud.com). Easily sync events from various devices with your Nextcloud and edit them online.**  
+The Journals app is intended to provide a personal and/or collaborative Journal to Nextcloud.
 
-![](https://raw.githubusercontent.com/nextcloud/screenshots/master/apps/Calendar/view_week.png)
+It is not intended as another Notes or Todo App.
 
-## :blue_heart: :tada: Why is this so awesome?
+I will utilize vJournal for a couple of reasons:
+* it is already supported by nextcloud DAV but is not used yet
+* it closes the gap of actively supported ical object formats by nextcloud and therefore 
+* vJournal was meant for journal entries
+* it integrates with existing calendars
+* vJournal is based (forked) on the Nextcloud calendar App as this ap already supports all key funktions for vJournal.
 
-* :rocket: **Integration with other Nextcloud apps!** Currently Contacts and Circles – more to come.
-* :globe_with_meridians: **WebCal Support!** Want to see your favorite team's matchdays in your calendar? No problem!
-* :raising_hand: **Attendees!** Invite people to your events
-* :watch: **Free/Busy:** See when your attendees are available to meet
-* :alarm_clock: **Reminders!** Get alarms for events inside your browser and via email.
-* :see_no_evil: **We’re not reinventing the wheel!** Based on the great [c-dav library](https://github.com/nextcloud/cdav-library), [ical.js](https://github.com/mozilla-comm/ical.js) and [fullcalendar](https://github.com/fullcalendar/fullcalendar) libraries.
+all credit for the hard work goes to the Nextcloud calendar Team.
 
-And in the works for the [coming versions](https://github.com/nextcloud/calendar/milestones/):
-* :mag: Search for events ([#8](https://github.com/nextcloud/calendar/issues/8))
-* :heavy_minus_sign: List view ([#402](https://github.com/nextcloud/calendar/issues/402))
-* :ballot_box_with_check: Show tasks with a due date ([#28](https://github.com/nextcloud/calendar/issues/28))
+I would love for contributers to support me with this project.
 
 ## :hammer_and_wrench: Installation
 
-In your Nextcloud, simply navigate to »Apps«, choose the category »Organization«, find the Calendar app and enable it.
-Then open the Calendar app from the app menu.
+This App is currently in developement. There is no working version as of yet.
 
-## :satellite: Support
+I would love for contributers to support me with this project.
 
-If you need assistance or want to ask a question about Calendar, you are welcome to [ask for support](https://help.nextcloud.com/c/apps/calendar) in our Forums or the [IRC-Channel](https://webchat.freenode.net/?channels=nextcloud-calendar).
-If you have found a bug, feel free to open a new Issue on GitHub. Keep in mind, that this repository only manages the frontend.
-If you find bugs or have problems with the CalDAV-Backend, you should ask the team at [Nextcloud server](https://github.com/nextcloud/server) for help!
-
-## :earth_africa: Supported Browsers
-
-* Chrome/Chromium 76+
-* Edge 40+
-* Firefox 60+
-* Internet Explorer 11
-* Safari 12.1+
+Place this app in **nextcloud/apps/**
 
 ## Maintainers
 
-- [Georg Ehrke](https://github.com/georgehrke)
-- [Thomas Citharel](https://github.com/tcitworld)
-- [and many more](https://github.com/nextcloud/calendar/graphs/contributors)
-
-If you’d like to join, just go through the [issue list](https://github.com/nextcloud/calendar/issues?utf8=✓&q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22+) and fix some. :)   
-We’re also in [#nextcloud-calendar on freenode IRC](https://webchat.freenode.net/?channels=nextcloud-calendar).
-
-We’d like to thank [BrowserStack](https://www.browserstack.com) for providing us with a free subscription.
-
-## Nightly builds / Pre-releases
-
-Instead of setting everything up manually, you can just [download the nightly builds](https://nightly.portknox.net/calendar/?C=M;O=D) or [download a pre-release](https://github.com/nextcloud/calendar/releases) instead.
-Nightly builds are updated every 24 hours, and are pre-configured with all the needed dependencies.
-
-1. Download
-2. Extract the tar archive to 'path-to-nextcloud/apps'
-3. Navigate to »Apps«, choose the category »Productivity«, find the Calendar app and enable it.
-
-The nightly builds are provided by [Portknox.net](https://portknox.net)
-
-When reporting issues, please mention the date in the tar archive's name.
+- [Johannes Szeibert](https://github.com/ProfDrJones)
 
 ## Build the app
 
@@ -89,14 +54,3 @@ You can use the provided Makefile to run all tests by using:
 ```
 make test
 ```
-
-## :v: Code of conduct
-
-The Nextcloud community has core values that are shared between all members during conferences,
-hackweeks and on all interactions in online platforms including [Github](https://github.com/nextcloud) and [Forums](https://help.nextcloud.com).
-If you contribute, participate or interact with this community, please respect [our shared values](https://nextcloud.com/code-of-conduct/). :relieved:
-
-## :heart: How to create a pull request
-
-This guide will help you get started: 
-- :dancer: :smile: [Opening a pull request](https://opensource.guide/how-to-contribute/#opening-a-pull-request) 

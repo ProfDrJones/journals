@@ -32,7 +32,7 @@ Vue.use(Router)
 
 const webRootWithIndexPHP = getRootUrl() + '/index.php'
 const doesURLContainIndexPHP = window.location.pathname.startsWith(webRootWithIndexPHP)
-const base = generateUrl('apps/calendar', {}, {
+const base = generateUrl('apps/journals', {}, {
 	noRewrite: doesURLContainIndexPHP,
 })
 

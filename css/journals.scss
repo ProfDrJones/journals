@@ -19,33 +19,11 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-.import-modal {
-	.modal-container {
-		padding: 24px !important;
-		min-width: 50%;
-		overflow: visible !important;
-
-		.import-modal__title,
-		.import-modal__subtitle {
-			text-align: center;
-		}
-
-		.import-modal-file-item {
-			display: flex;
-			padding-top: 10px;
-
-			&--header {
-				font-weight: bold;
-			}
-
-			&__filename {
-				flex: 2 1 0;
-			}
-
-			&__calendar-select {
-				flex: 1 1 0;
-			}
-		}
-	}
-}
+@import 'app-navigation.scss';
+@import 'app-sidebar.scss';
+@import 'app-settings.scss';
+@import 'freebusy.scss';
+@import 'fullcalendar.scss';
+@import 'global.scss';
+@import 'icons.scss';
+@import 'print.scss';

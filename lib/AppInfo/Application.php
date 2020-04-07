@@ -1,7 +1,12 @@
 <?php
 declare(strict_types=1);
 /**
- * Calendar App
+ * Nextcloud - Journals
+ *
+ * @author Johannes Szeibert
+ *
+ * This is a modified version from Nextcloud - Calendar
+ * original by:
  *
  * @author Georg Ehrke
  * @copyright 2019 Georg Ehrke <oc.list@georgehrke.com>
@@ -20,14 +25,14 @@ declare(strict_types=1);
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-namespace OCA\Calendar\AppInfo;
+namespace OCA\Journals\AppInfo;
 
 use OCP\AppFramework\App;
 
 /**
  * Class Application
  *
- * @package OCA\Calendar\AppInfo
+ * @package OCA\Journals\AppInfo
  */
 class Application extends App {
 
@@ -35,6 +40,6 @@ class Application extends App {
 	 * @param array $params
 	 */
 	public function __construct(array $params=[]) {
-		parent::__construct('calendar', $params);
+		parent::__construct('journals', $params);
 	}
 }
