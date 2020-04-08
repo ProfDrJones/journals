@@ -59,10 +59,6 @@ export function eventSourceFunction(calendarObjects, calendar, start, end, timez
 				classNames.push('fc-event-nc-tentative')
 			}
 
-			if (object.hasComponent('VALARM')) {
-				classNames.push('fc-event-nc-alarms')
-			}
-
 			const jsStart = object.startDate.getInTimezone(timezone).jsDate
 			const jsEnd = object.endDate.getInTimezone(timezone).jsDate
 			// Technically, an event's end is not allowed to be equal to it's start,

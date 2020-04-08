@@ -178,11 +178,6 @@
 					<div class="icon icon-loading app-sidebar-tab-loading-indicator__icon" />
 				</div>
 			</div>
-			<div v-if="!isLoading" class="app-sidebar-tab__content">
-				<AlarmList
-					:calendar-object-instance="calendarObjectInstance"
-					:is-read-only="isReadOnly" />
-			</div>
 			<SaveButtons
 				v-if="!isLoading && !isReadOnly"
 				class="app-sidebar-tab__buttons"
@@ -239,8 +234,6 @@ import ActionButton from '@nextcloud/vue/dist/Components/ActionButton'
 
 import { mapState } from 'vuex'
 
-import AlarmList from '../components/Editor/Alarm/AlarmList'
-
 import InviteesList from '../components/Editor/Invitees/InviteesList'
 import PropertyCalendarPicker from '../components/Editor/Properties/PropertyCalendarPicker'
 import PropertySelect from '../components/Editor/Properties/PropertySelect'
@@ -265,7 +258,6 @@ export default {
 		SaveButtons,
 		PropertyTitleTimePickerLoadingPlaceholder,
 		IllustrationHeader,
-		AlarmList,
 		AppSidebar,
 		AppSidebarTab,
 		ActionLink,

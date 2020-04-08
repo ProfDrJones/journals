@@ -23,7 +23,6 @@
 import { getDateFromDateTimeValue } from '../utils/date.js'
 import DurationValue from 'calendar-js/src/values/durationValue.js'
 import { getHexForColorName } from '../utils/color.js'
-import { mapAlarmComponentToAlarmObject } from './alarm.js'
 import { mapAttendeePropertyToAttendeeObject } from './attendee.js'
 import {
 	getDefaultRecurrenceRuleObject,
@@ -79,8 +78,6 @@ const getDefaultEventObject = (props = {}) => Object.assign({}, {
 	attendees: [],
 	// Organizer of the event
 	organizer: null,
-	// Alarm of the event
-	alarms: [],
 	// Custom color of the event
 	customColor: null,
 	// Categories
@@ -138,13 +135,6 @@ const mapEventComponentToEventObject = (eventComponent) => {
 			uri: organizerProperty.email,
 			attendeeProperty: organizerProperty,
 		}
-	}
-
-	/**
-	 * Extract alarms
-	 */
-	for (const alarm of eventComponent.getAlarmIterator()) {
-		eventObject.alarms.push(mapAlarmComponentToAlarmObject(alarm))
 	}
 
 	/**
