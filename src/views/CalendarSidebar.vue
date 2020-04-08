@@ -20,11 +20,11 @@
   -->
 
 <template>
-	<AppContent>
+	<AppSidebar title="title">
 		<!-- Full calendar -->
 		<FullCalendar
 			ref="fullCalendar"
-			default-view="dayGridMonth"
+			default-view="listWeek"
 			:force-event-duration="true"
 			:header="false"
 			:height="windowResize"
@@ -46,17 +46,14 @@
 			:unselect-auto="false"
 			:week-numbers-within-days="true"
 			@eventResize="eventResize" />
-	</AppContent>
+	</AppSidebar>
 </template>
 
 <script>
-import AppContent from '@nextcloud/vue/dist/Components/AppContent'
+import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import FullCalendar from '@fullcalendar/vue'
 import '@fullcalendar/core/main.css'
 import listPlugin from '@fullcalendar/list'
-import '@fullcalendar/list/main.css'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import '@fullcalendar/daygrid/main.css'
 import debounce from 'debounce'
 import VTimezoneNamedTimezone from '../fullcalendar/vtimezoneNamedTimezoneImpl'
 import { getLocale } from '@nextcloud/l10n'
@@ -69,9 +66,9 @@ import eventOrder from '../fullcalendar/eventOrder'
 import eventSource from '../fullcalendar/eventSource'
 
 export default {
-	name: 'Calendar',
+	name: 'CalendarSidebar',
 	components: {
-		AppContent,
+		AppSidebar,
 		FullCalendar,
 	},
 	data() {
@@ -88,7 +85,6 @@ export default {
 		},
 		plugins() {
 			return [
-				dayGridPlugin,
 				listPlugin,
 				VTimezoneNamedTimezone,
 			]

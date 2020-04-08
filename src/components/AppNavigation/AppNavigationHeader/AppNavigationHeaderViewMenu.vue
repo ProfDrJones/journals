@@ -44,17 +44,17 @@ export default {
 	computed: {
 		views() {
 			return [{
-				id: 'timeline',
+				id: 'TimelineView',
 				icon: 'icon-view-timeline',
-				label: this.$t('journals', 'Timeline'),
+				label: this.$t('journals', 'Timeline View'),
 			}, {
-				id: 'journal',
+				id: 'JournalView',
 				icon: 'icon-view-journal',
-				label: this.$t('journals', 'Journal'),
+				label: this.$t('journals', 'Journal View'),
 			}, {
-				id: 'calendar',
+				id: 'CalendarView',
 				icon: 'icon-view-calendar',
-				label: this.$t('journals', 'Calendar'),
+				label: this.$t('journals', 'Calendar View'),
 			}]
 		},
 		defaultIcon() {
@@ -69,13 +69,11 @@ export default {
 	},
 	methods: {
 		selectView(viewName) {
-			const name = this.$route.name
-			const params = Object.assign({}, this.$route.params, {
-				path: viewName,
-			})
+			const name = viewName
+			const params = Object.assign({}, this.$route.params)
 
 			// Don't push new route when view didn't change
-			if (this.$route.params.path === viewName) {
+			if (this.$route.name === viewName) {
 				return
 			}
 

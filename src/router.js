@@ -31,9 +31,9 @@ import Router from 'vue-router'
 import { getRootUrl, generateUrl } from '@nextcloud/router'
 
 import Calendar from './views/Calendar'
-import EditSidebar from './views/EditSidebar'
 import Timeline from './views/Timeline'
 import Journal from './views/Journal'
+import CalendarSidebar from './views/CalendarSidebar'
 import { getInitialView } from './utils/router.js'
 
 Vue.use(Router)
@@ -48,56 +48,33 @@ const router = new Router({
 	mode: 'history',
 	base,
 	routes: [
-
 		{
 			path: '/timeline/:firstDay',
-			component: Timeline,
 			name: 'TimelineView',
+			components: {
+				default: Timeline,
+				sideBar: CalendarSidebar,
+			  },
 		},
-
 		{
 			path: '/journal/:firstDay',
-			component: Journal,
 			name: 'JournalView',
+			components: {
+				default: Journal,
+				sideBar: CalendarSidebar,
+			  },
 		},
-		/**
-		 * This route is the root-view that does not contain any parameters so far.
-		 * Users usually access it by clicking the calendar-icon in the navigation bar.
-		 *
-		 * It automatically redirects you to the calendar view, showing the current month
-		 * in the user's preferred view.
-		 */
+		{
+			path: '/calendar/:firstDay',
+			name: 'CalendarView',
+			components: {
+				default: Calendar,
+			  },
+		},
+
 		{
 			path: '/',
 			redirect: `/${getInitialView()}/now`,
-		},
-		{
-			path: '/edit/:object',
-			redirect: `/${getInitialView()}/now/edit/sidebar/:object/next`,
-		},
-		/**
-		 * This is the main route that contains the current view and viewed day
-		 * It has to be last, so that other routes starting with /p/, etc. match first
-		 *
-		 *
-		 *
-		 */
-		{
-			path: '/:view/:firstDay',
-			component: Calendar,
-			name: 'CalendarView',
-			children: [
-				{
-					path: '/:view/:firstDay/edit/sidebar/:object/:recurrenceId',
-					name: 'EditSidebarView',
-					component: EditSidebar,
-				},
-				{
-					path: '/:view/:firstDay/new/sidebar/:allDay/:dtstart/:dtend',
-					name: 'NewSidebarView',
-					component: EditSidebar,
-				},
-			],
 		},
 	],
 })
