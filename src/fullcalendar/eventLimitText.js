@@ -28,5 +28,5 @@ import { translatePlural as n } from '@nextcloud/l10n'
  * @returns {string}
  */
 export default function(count) {
-	return n('calendar', '+%n more', '+%n more', count)
+	return n('journals', '+%n more', '+%n more', count)
 }

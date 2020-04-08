@@ -48,6 +48,7 @@ const router = new Router({
 	mode: 'history',
 	base,
 	routes: [
+
 		{
 			path: '/timeline/:firstDay',
 			component: Timeline,

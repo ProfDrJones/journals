@@ -27,9 +27,9 @@ import { loadState } from '@nextcloud/initial-state'
  */
 export function getInitialView() {
 	try {
-		return loadState('calendar', 'initial_view')
+		return loadState('journals', 'initial_view')
 	} catch (error) {
-		return 'dayGridMonth'
+		return 'timeline'
 	}
 }
 
@@ -41,9 +41,5 @@ export function getInitialView() {
  * @returns {String}
  */
 export function getPrefixedRoute(currentRouteName, toRouteName) {
-	if (currentRouteName.startsWith('Embed')) {
-		return 'Embed' + toRouteName
-	}
-
 	return toRouteName
 }

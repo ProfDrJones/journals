@@ -44,17 +44,17 @@ export default {
 	computed: {
 		views() {
 			return [{
-				id: 'timeGridDay',
-				icon: 'icon-view-day',
-				label: this.$t('journals', 'Caledar'),
-			}, {
 				id: 'timeline',
-				icon: 'icon-view-module',
+				icon: 'icon-view-timeline',
 				label: this.$t('journals', 'Timeline'),
 			}, {
 				id: 'journal',
-				icon: 'icon-view-module',
+				icon: 'icon-view-journal',
 				label: this.$t('journals', 'Journal'),
+			}, {
+				id: 'calendar',
+				icon: 'icon-view-calendar',
+				label: this.$t('journals', 'Calendar'),
 			}]
 		},
 		defaultIcon() {
@@ -71,11 +71,11 @@ export default {
 		selectView(viewName) {
 			const name = this.$route.name
 			const params = Object.assign({}, this.$route.params, {
-				view: viewName,
+				path: viewName,
 			})
 
 			// Don't push new route when view didn't change
-			if (this.$route.params.view === viewName) {
+			if (this.$route.params.path === viewName) {
 				return
 			}
 

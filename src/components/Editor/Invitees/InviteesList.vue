@@ -60,7 +60,6 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import InviteesListSearch from './InviteesListSearch'
 import InviteesListItem from './InviteesListItem'
 import OrganizerListItem from './OrganizerListItem'

@@ -34,12 +34,13 @@
 				:loading-calendars="loadingCalendars" />
 		</AppNavigation>
 		<AppContent>
-			<Timeline />
+			<TimelineList />
 		</AppContent>
 		<AppSidebar>
+			<!-- Full calendar -->
 			<FullCalendar
 				ref="fullCalendar"
-				:default-view="defaultView"
+				default-view="listWeek"
 				:editable="isEditable"
 				:force-event-duration="true"
 				:header="showHeader"
@@ -72,9 +73,6 @@
 				@eventDrop="eventDrop"
 				@eventResize="eventResize"
 				@select="select" />
-
-			<EmptyCalendar
-				v-if="showEmptyCalendarScreen" />
 		</AppSidebar>
 	</Content>
 </template>
@@ -119,19 +117,17 @@ import {
 	mapState,
 } from 'vuex'
 import eventRender from '../fullcalendar/eventRender.js'
-import EmptyCalendar from '../components/EmptyCalendar.vue'
 import { getLocale } from '@nextcloud/l10n'
 import loadMomentLocalization from '../utils/moment.js'
 import windowResize from '../fullcalendar/windowResize.js'
 import dayRender from '../fullcalendar/dayRender.js'
 import { loadState } from '@nextcloud/initial-state'
-import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
-import Timeline from '../components/Timeline'
+import { AppSidebar } from '@nextcloud/vue/dist/Components/AppSidebar'
+import TimelineList from '../components/Timeline'
 
 export default {
 	name: 'Timeline',
 	components: {
-		EmptyCalendar,
 		Settings,
 		CalendarList,
 		AppNavigationHeader,
@@ -140,7 +136,7 @@ export default {
 		AppNavigation,
 		FullCalendar,
 		AppSidebar,
-		Timeline,
+		TimelineList,
 	},
 	data() {
 		return {
@@ -148,7 +144,6 @@ export default {
 			timeFrameCacheExpiryJob: null,
 			updateTodayJob: null,
 			updateTodayJobPreviousDate: null,
-			showEmptyCalendarScreen: false,
 			fullCalendarLocale: 'en',
 			locales: [],
 			firstDay: 0,
@@ -164,9 +159,6 @@ export default {
 		}),
 		defaultDate() {
 			return getYYYYMMDDFromFirstdayParam(this.$route.params.firstDay)
-		},
-		defaultView() {
-			return this.$route.params.view
 		},
 		eventSources() {
 			return this.$store.getters.enabledCalendars.map(eventSource(this.$store))
@@ -282,47 +274,37 @@ export default {
 		})
 		this.$store.dispatch('initializeCalendarJsConfig')
 
-		if (this.$route.name.startsWith('Public')) {
-			client._createPublicCalendarHome()
-			const tokens = this.$route.params.tokens.split('-')
-			const calendars = await this.$store.dispatch('getPublicCalendars', { tokens })
-			this.loadingCalendars = false
-
-			if (calendars.length === 0) {
-				this.showEmptyCalendarScreen = true
+		await client.connect({ enableCalDAV: true })
+		await this.$store.dispatch('fetchCurrentUserPrincipal')
+		const calendars = await this.$store.dispatch('getCalendars')
+		const owners = []
+		calendars.forEach((calendar) => {
+			if (owners.indexOf(calendar.owner) === -1) {
+				owners.push(calendar.owner)
 			}
-		} else {
-			await client.connect({ enableCalDAV: true })
-			await this.$store.dispatch('fetchCurrentUserPrincipal')
-			const calendars = await this.$store.dispatch('getCalendars')
-			const owners = []
-			calendars.forEach((calendar) => {
-				if (owners.indexOf(calendar.owner) === -1) {
-					owners.push(calendar.owner)
-				}
+		})
+		owners.forEach((owner) => {
+			this.$store.dispatch('fetchPrincipalByUrl', {
+				url: owner,
 			})
-			owners.forEach((owner) => {
-				this.$store.dispatch('fetchPrincipalByUrl', {
-					url: owner,
-				})
+		})
+
+		const writeableCalendarIndex = calendars.findIndex((calendar) => {
+			return !calendar.readOnly
+		})
+
+		// No writeable calendars? Create a new one!
+		if (writeableCalendarIndex === -1) {
+			this.loadingCalendars = true
+			await this.$store.dispatch('appendCalendar', {
+				displayName: this.$t('journals', 'Personal'),
+				color: uidToHexColor(this.$t('journals', 'Personal')),
+				order: 0,
 			})
-
-			const writeableCalendarIndex = calendars.findIndex((calendar) => {
-				return !calendar.readOnly
-			})
-
-			// No writeable calendars? Create a new one!
-			if (writeableCalendarIndex === -1) {
-				this.loadingCalendars = true
-				await this.$store.dispatch('appendCalendar', {
-					displayName: this.$t('calendars', 'Personal'),
-					color: uidToHexColor(this.$t('calendars', 'Personal')),
-					order: 0,
-				})
-			}
-
-			this.loadingCalendars = false
 		}
+
+		this.loadingCalendars = false
+
 	},
 	async mounted() {
 		if (this.timezone === 'automatic' && this.timezoneId === 'UTC') {

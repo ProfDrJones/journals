@@ -68,7 +68,6 @@
 				@eventDrop="eventDrop"
 				@eventResize="eventResize"
 				@select="select" />
-
 		</AppContent>
 		<!-- Edit modal -->
 		<router-view v-if="!loadingCalendars" />
@@ -273,8 +272,8 @@ export default {
 		if (writeableCalendarIndex === -1) {
 			this.loadingCalendars = true
 			await this.$store.dispatch('appendCalendar', {
-				displayName: this.$t('calendars', 'Personal'),
-				color: uidToHexColor(this.$t('calendars', 'Personal')),
+				displayName: this.$t('journals', 'Personal'),
+				color: uidToHexColor(this.$t('journals', 'Personal')),
 				order: 0,
 			})
 		}
