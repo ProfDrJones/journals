@@ -314,6 +314,30 @@ const getters = {
 	},
 
 	/**
+	 * List of sorted calendars and subscriptions
+	 *
+	 * @param {Object} state the store data
+	 * @returns {Array}
+	 */
+	sortedJournalCalendars(state) {
+		return state.calendars
+			.filter(calendar => calendar.supportsJournals)
+			.sort((a, b) => a.order - b.order)
+	},
+
+	/**
+	 * List of sorted calendars and subscriptions
+	 *
+	 * @param {Object} state the store data
+	 * @returns {Array}
+	 */
+	sortedNonJournalCalendars(state) {
+		return state.calendars
+			.filter(calendar => !calendar.supportsJournals)
+			.sort((a, b) => a.order - b.order)
+	},
+
+	/**
 	 * List of sorted calendars
 	 *
 	 * @param {Object} state the store data

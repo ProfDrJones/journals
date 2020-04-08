@@ -92,14 +92,17 @@ class ViewController extends Controller {
 	 */
 	public function index():TemplateResponse {
 		$defaultInitialView = $this->config->getAppValue($this->appName, 'currentView', 'dayGridMonth');
+		$defaultTimezone = $this->config->getAppValue($this->appName, 'timezone', 'automatic');
 
 		$appVersion = $this->config->getAppValue($this->appName, 'installed_version');
 		$firstRun = $this->config->getUserValue($this->userId, $this->appName, 'firstRun', 'yes') === 'yes';
 		$initialView = $this->config->getUserValue($this->userId, $this->appName, 'currentView', $defaultInitialView);
+		$timezone = $this->config->getUserValue($this->userId, $this->appName, 'timezone', $defaultTimezone);
 
 		$this->initialStateService->provideInitialState($this->appName, 'app_version', $appVersion);
 		$this->initialStateService->provideInitialState($this->appName, 'first_run', $firstRun);
 		$this->initialStateService->provideInitialState($this->appName, 'initial_view', $initialView);
+		$this->initialStateService->provideInitialState($this->appName, 'timezone', $timezone);
 
 		return new TemplateResponse($this->appName, 'main');
 	}

@@ -31,13 +31,11 @@ import { sync } from 'vuex-router-sync'
 import { getRequestToken } from '@nextcloud/auth'
 import { linkTo } from '@nextcloud/router'
 import { translate, translatePlural } from '@nextcloud/l10n'
-import ClickOutside from 'vue-click-outside'
 import VueClipboard from 'vue-clipboard2'
 import VTooltip from 'v-tooltip'
 import windowTitleService from './services/windowTitleService.js'
 
 // register global components
-Vue.directive('ClickOutside', ClickOutside)
 Vue.use(VTooltip)
 Vue.use(VueClipboard)
 

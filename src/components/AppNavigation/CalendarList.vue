@@ -1,4 +1,11 @@
 <!--
+  - Nextcloud - Journals
+  -
+  - @author Johannes Szeibert
+  -
+  - This is a modified version from Nextcloud - Calendar
+  - original by:
+  -
   - @copyright Copyright (c) 2019 Georg Ehrke <oc.list@georgehrke.com>
   - @author Georg Ehrke <oc.list@georgehrke.com>
   -
@@ -20,28 +27,23 @@
   -->
 
 <template>
-	<transition-group v-if="!isPublic"
+	<transition-group
 		id="calendars-list"
 		name="list"
 		tag="ul">
-		<AppNavigationSpacer :key="spacerKey" />
 		<CalendarListItemLoadingPlaceholder v-if="loadingCalendars" :key="loadingKeyCalendars" />
+		<AppNavigationCaption :key="journalsCaptionKey" :title="journalTitle" />
 		<CalendarListItem
-			v-for="calendar in allCalendars"
+			v-for="calendar in journalCalendars"
 			:key="calendar.id"
 			:calendar="calendar" />
 		<CalendarListNew
 			v-if="!loadingCalendars"
 			:key="newCalendarKey"
 			:disabled="loadingCalendars" />
-	</transition-group>
-	<transition-group v-else
-		id="calendars-list"
-		name="list"
-		tag="ul">
-		<CalendarListItemLoadingPlaceholder v-if="loadingCalendars" :key="loadingKeyCalendars" />
-		<PublicCalendarListItem
-			v-for="calendar in subscriptions"
+		<AppNavigationCaption :key="nonJournalsCaptionKey" :title="nonJournalsTitle" />
+		<CalendarListItem
+			v-for="calendar in nonJournalCalendars"
 			:key="calendar.id"
 			:calendar="calendar" />
 	</transition-group>
@@ -51,20 +53,18 @@
 import {
 	mapGetters,
 } from 'vuex'
-import AppNavigationSpacer from '@nextcloud/vue/dist/Components/AppNavigationSpacer'
+import AppNavigationCaption from '@nextcloud/vue/dist/Components/AppNavigationCaption'
 import CalendarListNew from './CalendarList/CalendarListNew.vue'
 import CalendarListItem from './CalendarList/CalendarListItem.vue'
-import PublicCalendarListItem from './CalendarList/PublicCalendarListItem.vue'
 import CalendarListItemLoadingPlaceholder from './CalendarList/CalendarListItemLoadingPlaceholder.vue'
 
 export default {
 	name: 'CalendarList',
 	components: {
-		AppNavigationSpacer,
+		AppNavigationCaption,
 		CalendarListNew,
 		CalendarListItem,
 		CalendarListItemLoadingPlaceholder,
-		PublicCalendarListItem,
 	},
 	props: {
 		isPublic: {
@@ -79,6 +79,8 @@ export default {
 	computed: {
 		...mapGetters({
 			allCalendars: 'sortedCalendarsSubscriptions',
+			journalCalendars: 'sortedJournalCalendars',
+			nonJournalCalendars: 'sortedNonJournalCalendars',
 			subscriptions: 'sortedSubscriptions',
 		}),
 		newCalendarKey() {
@@ -87,8 +89,17 @@ export default {
 		loadingKeyCalendars() {
 			return this._uid + '-loading-placeholder-calendars'
 		},
-		spacerKey() {
-			return this._uid + '-spacer'
+		journalsCaptionKey() {
+			return this._uid + '-journalCaption'
+		},
+		nonJournalsCaptionKey() {
+			return this._uid + '-nonJournalCaption'
+		},
+		journalsTitle() {
+			return this.$t('journals', 'Journals')
+		},
+		nonJournalsTitle() {
+			return this.$t('journals', 'Other Calendars')
 		},
 	},
 }

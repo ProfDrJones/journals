@@ -20,9 +20,7 @@
  *
  */
 import HttpClient from '@nextcloud/axios'
-import client from '../services/caldavService.js'
 import { getLinkToConfig } from '../utils/settings.js'
-import { mapDavCollectionToCalendar } from '../models/calendar'
 import detectTimezone from '../services/timezoneDetectionService'
 import { setConfig } from 'calendar-js'
 
@@ -31,61 +29,31 @@ const state = {
 	eventLimit: null,
 	firstRun: null,
 	momentLocale: 'en',
-	showWeekends: null,
-	showWeekNumbers: null,
-	skipPopover: null,
-	slotDuration: null,
-	talkEnabled: false,
+	defaultJournal: null,
+	defaultJournalEntryAllDay: null,
 	timezone: null,
 }
 
 const mutations = {
 
 	/**
-	 * Updates the user's setting for event limit
-	 *
-	 * @param {Object} state The Vuex state
-	 */
-	toggleEventLimitEnabled(state) {
-		state.eventLimit = !state.eventLimit
-	},
-
-	/**
-	 * Updates the user's setting for visibility of event popover
-	 *
-	 * @param {Object} state The Vuex state
-	 */
-	togglePopoverEnabled(state) {
-		state.skipPopover = !state.skipPopover
-	},
-
-	/**
-	 * Updates the user's setting for visibility of weekends
-	 *
-	 * @param {Object} state The Vuex state
-	 */
-	toggleWeekendsEnabled(state) {
-		state.showWeekends = !state.showWeekends
-	},
-
-	/**
-	 * Updates the user's setting for visibility of week numbers
-	 *
-	 * @param {Object} state The Vuex state
-	 */
-	toggleWeekNumberEnabled(state) {
-		state.showWeekNumbers = !state.showWeekNumbers
-	},
-
-	/**
-	 * Updates the user's preferred slotDuration
+	 * Updates the user's timezone
 	 *
 	 * @param {Object} state The Vuex state
 	 * @param {Object} data The destructuring object
-	 * @param {String} data.slotDuration The new slot duration
+	 * @param {String} data.timezoneId The new timezone
 	 */
-	setSlotDuration(state, { slotDuration }) {
-		state.slotDuration = slotDuration
+	setDefaultJournal(state, { calendarID }) {
+		state.DefaultJournal = calendarID
+	},
+
+	/**
+	 * Updates the user's setting for Journals Entries to be AllDay by default
+	 *
+	 * @param {Object} state The Vuex state
+	 */
+	toggleDefaultJournalEntryAllDay(state) {
+		state.defaultJournalEntryAllDay = !state.defaultJournalEntryAllDay
 	},
 
 	/**
@@ -109,13 +77,9 @@ const mutations = {
 		console.debug('Initial settings:', settings)
 
 		state.appVersion = settings.appVersion
-		state.eventLimit = settings.eventLimit
 		state.firstRun = settings.firstRun
-		state.showWeekNumbers = settings.showWeekNumbers
-		state.showWeekends = settings.showWeekends
-		state.skipPopover = settings.skipPopover
-		state.slotDuration = settings.slotDuration
-		state.talkEnabled = settings.talkEnabled
+		state.defaultJournal = settings.defaultJournal
+		state.defaultJournalEntryAllDay = settings.defaultJournalEntryAllDay
 		state.timezone = settings.timezone
 	},
 
@@ -133,17 +97,6 @@ const mutations = {
 const getters = {
 
 	/**
-	 * Whether or not a birthday calendar exists
-	 *
-	 * @param {Object} state The Vuex state
-	 * @param {Object} getters the vuex getters
-	 * @returns {boolean}
-	 */
-	hasBirthdayCalendar: (state, getters) => {
-		return !!getters.getBirthdayCalendar
-	},
-
-	/**
 	 * Gets the resolved timezone.
 	 * If the timezone is set to automatic, it returns the user's current timezone
 	 * Otherwise, it returns the Olsen timezone stored
@@ -159,77 +112,17 @@ const getters = {
 const actions = {
 
 	/**
-	 * Updates the user's setting for visibility of birthday calendar
+	 * Updates the user's setting for Journal Entryies to be AllDay by default
 	 *
 	 * @param {Object} context The Vuex context
 	 * @returns {Promise<void>}
 	 */
-	async toggleBirthdayCalendarEnabled(context) {
-		if (context.getters.hasBirthdayCalendar) {
-			const calendar = context.getters.getBirthdayCalendar
-			return context.dispatch('deleteCalendar', { calendar })
-		} else {
-			await client.calendarHomes[0].enableBirthdayCalendar()
-			const davCalendar = await client.calendarHomes[0].find('contact_birthdays')
-			const calendar = mapDavCollectionToCalendar(davCalendar)
-			context.commit('addCalendar', { calendar })
-		}
-	},
-
-	/**
-	 * Updates the user's setting for event limit
-	 *
-	 * @param {Object} context The Vuex context
-	 * @returns {Promise<void>}
-	 */
-	async toggleEventLimitEnabled(context) {
-		const newState = !context.state.eventLimit
+	async toggleDefaultJournalEntryAllDayEnabled(context) {
+		const newState = !context.state.defaultJournalEntryAllDay
 		const value = newState ? 'yes' : 'no'
 
-		await HttpClient.post(getLinkToConfig('eventLimit'), { value })
-		context.commit('toggleEventLimitEnabled')
-	},
-
-	/**
-	 * Updates the user's setting for visibility of event popover
-	 *
-	 * @param {Object} context The Vuex context
-	 * @returns {Promise<void>}
-	 */
-	async togglePopoverEnabled(context) {
-		const newState = !context.state.skipPopover
-		const value = newState ? 'yes' : 'no'
-
-		await HttpClient.post(getLinkToConfig('skipPopover'), { value })
-		context.commit('togglePopoverEnabled')
-	},
-
-	/**
-	 * Updates the user's setting for visibility of weekends
-	 *
-	 * @param {Object} context The Vuex context
-	 * @returns {Promise<void>}
-	 */
-	async toggleWeekendsEnabled(context) {
-		const newState = !context.state.showWeekends
-		const value = newState ? 'yes' : 'no'
-
-		await HttpClient.post(getLinkToConfig('showWeekends'), { value })
-		context.commit('toggleWeekendsEnabled')
-	},
-
-	/**
-	 * Updates the user's setting for visibility of week numbers
-	 *
-	 * @param {Object} context The Vuex context
-	 * @returns {Promise<void>}
-	 */
-	async toggleWeekNumberEnabled(context) {
-		const newState = !context.state.showWeekNumbers
-		const value = newState ? 'yes' : 'no'
-
-		await HttpClient.post(getLinkToConfig('showWeekNr'), { value })
-		context.commit('toggleWeekNumberEnabled')
+		await HttpClient.post(getLinkToConfig('defaultJournalEntryAllDay'), { value })
+		context.commit('toggleDefaultJournalEntryAllDayEnabled')
 	},
 
 	/**
@@ -245,24 +138,6 @@ const actions = {
 		await HttpClient.post(getLinkToConfig('view'), {
 			value: initialView,
 		})
-	},
-
-	/**
-	 * Updates the user's preferred slotDuration
-	 *
-	 * @param {Object} context The Vuex context
-	 * @param {Object} data The destructuring object
-	 * @param {String} data.slotDuration The new slot duration
-	 */
-	async setSlotDuration(context, { slotDuration }) {
-		if (context.state.slotDuration === slotDuration) {
-			return
-		}
-
-		await HttpClient.post(getLinkToConfig('slotDuration'), {
-			value: slotDuration,
-		})
-		context.commit('setSlotDuration', { slotDuration })
 	},
 
 	/**
@@ -285,13 +160,32 @@ const actions = {
 	},
 
 	/**
+	 * Updates the user's default Journal
+	 *
+	 * @param {Object} context The Vuex context
+	 * @param {Object} data The destructuring object
+	 * @param {String} data.timezoneId The new dalendarId
+	 * @returns {Promise<void>}
+	 */
+	async setDefaultJournal(context, { calendarId }) {
+		if (context.state.defaultJournal === calendarId) {
+			return
+		}
+
+		await HttpClient.post(getLinkToConfig('defaultJournal'), {
+			value: calendarId,
+		})
+		context.commit('setDefaultJournal', { calendarId })
+	},
+
+	/**
 	 * Initializes the calendar-js configuration
 	 *
 	 * @param {Object} vuex The Vuex destructuring object
 	 * @param {Object} vuex.state The Vuex state
 	 */
 	initializeCalendarJsConfig({ state }) {
-		setConfig('PRODID', `-//IDN nextcloud.com//Calendar app ${state.appVersion}//EN`)
+		setConfig('PRODID', `-//IDN nextcloud.com//Journals app ${state.appVersion}//EN`)
 		setConfig('component-list-significant-change', [
 			'SUMMARY',
 			'LOCATION',

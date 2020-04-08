@@ -1,4 +1,11 @@
 /**
+ * Nextcloud - Journals
+ *
+ * @author Johannes Szeibert
+ *
+ * This is a modified version from Nextcloud - Calendar
+ * original by:
+ *
  * @copyright Copyright (c) 2019 Georg Ehrke
  * @author Georg Ehrke <oc.list@georgehrke.com>
  *
@@ -24,8 +31,8 @@ import Router from 'vue-router'
 import { getRootUrl, generateUrl } from '@nextcloud/router'
 
 import Calendar from './views/Calendar'
-import EditSimple from './views/EditSimple'
-import EditSidebar from './views/EditSidebar'
+import Timeline from './views/Timeline'
+import Journal from './views/Journal'
 import { getInitialView } from './utils/router.js'
 
 Vue.use(Router)
@@ -41,38 +48,15 @@ const router = new Router({
 	base,
 	routes: [
 		{
-			path: '/p/:tokens/:view/:firstDay',
-			component: Calendar,
-			name: 'PublicCalendarView',
-			children: [
-				{
-					path: '/p/:tokens/:view/:firstDay/view/popover/:object/:recurrenceId',
-					name: 'PublicEditPopoverView',
-					component: EditSimple,
-				},
-				{
-					path: '/p/:tokens/:view/:firstDay/view/sidebar/:object/:recurrenceId',
-					name: 'PublicEditSidebarView',
-					component: EditSidebar,
-				},
-			],
+			path: '/timeline/:firstDay',
+			component: Timeline,
+			name: 'TimelineView',
 		},
+
 		{
-			path: '/embed/:tokens/:view/:firstDay',
-			component: Calendar,
-			name: 'EmbedCalendarView',
-			children: [
-				{
-					path: '/embed/:tokens/:view/:firstDay/view/popover/:object/:recurrenceId',
-					name: 'EmbedEditPopoverView',
-					component: EditSimple,
-				},
-				{
-					path: '/embed/:tokens/:view/:firstDay/view/sidebar/:object/:recurrenceId',
-					name: 'EmbedEditSidebarView',
-					component: EditSidebar,
-				},
-			],
+			path: '/journal/:firstDay',
+			component: Journal,
+			name: 'JournalView',
 		},
 		/**
 		 * This route is the root-view that does not contain any parameters so far.
@@ -86,24 +70,8 @@ const router = new Router({
 			redirect: `/${getInitialView()}/now`,
 		},
 		{
-			path: '/p/:tokens/:fancyName?',
-			redirect: `/p/:tokens/${getInitialView()}/now`,
-		},
-		{
-			path: '/public/:tokens/:fancyName?',
-			redirect: `/p/:tokens/${getInitialView()}/now`,
-		},
-		{
-			path: '/embed/:tokens',
-			redirect: `/embed/:tokens/${getInitialView()}/now`,
-		},
-		{
 			path: '/edit/:object',
 			redirect: `/${getInitialView()}/now/edit/sidebar/:object/next`,
-		},
-		{
-			path: '/edit/:object/:recurrenceId',
-			redirect: `/${getInitialView()}/now/edit/sidebar/:object/:recurrenceId`,
 		},
 		/**
 		 * This is the main route that contains the current view and viewed day
@@ -118,19 +86,9 @@ const router = new Router({
 			name: 'CalendarView',
 			children: [
 				{
-					path: '/:view/:firstDay/edit/popover/:object/:recurrenceId',
-					name: 'EditPopoverView',
-					component: EditSimple,
-				},
-				{
 					path: '/:view/:firstDay/edit/sidebar/:object/:recurrenceId',
 					name: 'EditSidebarView',
 					component: EditSidebar,
-				},
-				{
-					path: '/:view/:firstDay/new/popover/:allDay/:dtstart/:dtend',
-					name: 'NewPopoverView',
-					component: EditSimple,
 				},
 				{
 					path: '/:view/:firstDay/new/sidebar/:allDay/:dtstart/:dtend',

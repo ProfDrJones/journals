@@ -46,15 +46,15 @@ export default {
 			return [{
 				id: 'timeGridDay',
 				icon: 'icon-view-day',
-				label: this.$t('calendar', 'Day'),
+				label: this.$t('journals', 'Caledar'),
 			}, {
-				id: 'timeGridWeek',
-				icon: 'icon-view-week',
-				label: this.$t('calendar', 'Week'),
-			}, {
-				id: 'dayGridMonth',
+				id: 'timeline',
 				icon: 'icon-view-module',
-				label: this.$t('calendar', 'Month'),
+				label: this.$t('journals', 'Timeline'),
+			}, {
+				id: 'journal',
+				icon: 'icon-view-module',
+				label: this.$t('journals', 'Journal'),
 			}]
 		},
 		defaultIcon() {

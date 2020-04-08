@@ -22,7 +22,7 @@
 
 <template>
 	<button class="button primary new-event" @click="newEvent">
-		{{ $t('calendar', '+ New event') }}
+		{{ $t('journals', '+ New Journal Entry') }}
 	</button>
 </template>
 
@@ -30,16 +30,10 @@
 import { dateFactory } from '../../../utils/date'
 
 export default {
-	name: 'AppNavigationHeaderNewEvent',
+	name: 'AppNavigationHeaderNewJournalEntry',
 	methods: {
 		newEvent() {
-			let name = this.$store.state.settings.skipPopover
-				? 'NewSidebarView'
-				: 'NewPopoverView'
-
-			if (window.innerWidth <= 768 && name === 'NewPopoverView') {
-				name = 'NewSidebarView'
-			}
+			const name = 'NewSidebarView'
 
 			const start = dateFactory()
 			// Setting a value greater than 23 is actually supported with the expected behavior:

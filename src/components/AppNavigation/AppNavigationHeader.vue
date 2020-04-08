@@ -23,7 +23,7 @@
 	<header class="app-navigation-header">
 		<AppNavigationHeaderDatePicker />
 		<div class="new-event-today-view-section">
-			<AppNavigationHeaderNewEvent v-if="!isPublic" />
+			<AppNavigationHeaderNewJournalEntry />
 			<AppNavigationHeaderTodayButton />
 			<AppNavigationHeaderViewMenu />
 		</div>
@@ -33,7 +33,7 @@
 <script>
 import AppNavigationHeaderDatePicker from './AppNavigationHeader/AppNavigationHeaderDatePicker.vue'
 import AppNavigationHeaderTodayButton from './AppNavigationHeader/AppNavigationHeaderTodayButton.vue'
-import AppNavigationHeaderNewEvent from './AppNavigationHeader/AppNavigationHeaderNewEvent.vue'
+import AppNavigationHeaderNewJournalEntry from './AppNavigationHeader/AppNavigationHeaderNewJournalEntry.vue'
 import AppNavigationHeaderViewMenu from './AppNavigationHeader/AppNavigationHeaderViewMenu.vue'
 
 export default {
@@ -41,14 +41,8 @@ export default {
 	components: {
 		AppNavigationHeaderDatePicker,
 		AppNavigationHeaderTodayButton,
-		AppNavigationHeaderNewEvent,
+		AppNavigationHeaderNewJournalEntry,
 		AppNavigationHeaderViewMenu,
-	},
-	props: {
-		isPublic: {
-			type: Boolean,
-			required: true,
-		},
 	},
 }
 </script>

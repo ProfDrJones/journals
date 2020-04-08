@@ -34,7 +34,9 @@
 				:loading-calendars="loadingCalendars" />
 		</AppNavigation>
 		<AppContent>
-			<!-- Full calendar -->
+			<Timeline />
+		</AppContent>
+		<AppSidebar>
 			<FullCalendar
 				ref="fullCalendar"
 				:default-view="defaultView"
@@ -73,9 +75,7 @@
 
 			<EmptyCalendar
 				v-if="showEmptyCalendarScreen" />
-		</AppContent>
-		<!-- Edit modal -->
-		<router-view v-if="!loadingCalendars" />
+		</AppSidebar>
 	</Content>
 </template>
 
@@ -125,9 +125,11 @@ import loadMomentLocalization from '../utils/moment.js'
 import windowResize from '../fullcalendar/windowResize.js'
 import dayRender from '../fullcalendar/dayRender.js'
 import { loadState } from '@nextcloud/initial-state'
+import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
+import Timeline from '../components/Timeline'
 
 export default {
-	name: 'Calendar',
+	name: 'Timeline',
 	components: {
 		EmptyCalendar,
 		Settings,
@@ -137,6 +139,8 @@ export default {
 		AppContent,
 		AppNavigation,
 		FullCalendar,
+		AppSidebar,
+		Timeline,
 	},
 	data() {
 		return {

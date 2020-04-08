@@ -1,4 +1,11 @@
 <!--
+  - Nextcloud - Journals
+  -
+  - @author Johannes Szeibert
+  -
+  - This is a modified version from Nextcloud - Calendar
+  - original by:
+  -
   - @copyright Copyright (c) 2019 Georg Ehrke <oc.list@georgehrke.com>
   - @author Georg Ehrke <oc.list@georgehrke.com>
   -
@@ -23,7 +30,7 @@
 	<AppNavigationItem
 		v-click-outside="closeShareMenu"
 		:loading="calendar.loading"
-		:title="calendar.displayName || $t('calendar', 'Untitled calendar')"
+		:title="calendar.displayName || $t('journals', 'Untitled calendar')"
 		:class="{deleted: !!deleteTimeout, disabled: !calendar.enabled, 'open-sharing': shareMenuOpen}"
 		@click.prevent.stop="toggleEnabled">
 		<AppNavigationIconBullet
@@ -49,7 +56,7 @@
 				v-if="showRenameLabel"
 				icon="icon-rename"
 				@click.prevent.stop="openRenameInput">
-				{{ $t('calendar', 'Edit name') }}
+				{{ $t('journals', 'Edit name') }}
 			</ActionButton>
 			<ActionInput
 				v-if="showRenameInput"
@@ -60,13 +67,13 @@
 				v-if="showRenameSaving"
 				icon="icon-loading-small">
 				<!-- eslint-disable-next-line no-irregular-whitespace -->
-				{{ $t('calendar', 'Saving name …') }}
+				{{ $t('journals', 'Saving name …') }}
 			</ActionText>
 			<ActionButton
 				v-if="showColorLabel"
 				icon="icon-rename"
 				@click.prevent.stop="openColorInput">
-				{{ $t('calendar', 'Edit color') }}
+				{{ $t('journals', 'Edit color') }}
 			</ActionButton>
 			<ActionInput
 				v-if="showColorInput"
@@ -78,30 +85,30 @@
 				v-if="showColorSaving"
 				icon="icon-loading-small">
 				<!-- eslint-disable-next-line no-irregular-whitespace -->
-				{{ $t('calendar', 'Saving color …') }}
+				{{ $t('journals', 'Saving color …') }}
 			</ActionText>
 			<ActionButton
 				icon="icon-clippy"
 				@click.stop.prevent="copyLink">
-				{{ $t('calendar', 'Copy private link') }}
+				{{ $t('journals', 'Copy private link') }}
 			</ActionButton>
 			<ActionLink
 				icon="icon-download"
 				target="_blank"
 				:href="downloadUrl">
-				{{ $t('calendar', 'Download') }}
+				{{ $t('journals', 'Download') }}
 			</ActionLink>
 			<ActionButton
 				v-if="calendar.isSharedWithMe"
 				icon="icon-delete"
 				@click.prevent.stop="deleteCalendar">
-				{{ $t('calendar', 'Unshare from me') }}
+				{{ $t('journals', 'Unshare from me') }}
 			</ActionButton>
 			<ActionButton
 				v-if="!calendar.isSharedWithMe"
 				icon="icon-delete"
 				@click.prevent.stop="deleteCalendar">
-				{{ $t('calendar', 'Delete') }}
+				{{ $t('journals', 'Delete') }}
 			</ActionButton>
 		</template>
 
@@ -110,13 +117,13 @@
 				v-if="calendar.isSharedWithMe"
 				icon="icon-history"
 				@click.prevent.stop="cancelDeleteCalendar">
-				{{ $n('calendar', 'Unsharing the calendar in {countdown} second', 'Unsharing the calendar in {countdown} seconds', countdown, { countdown }) }}
+				{{ $n('journals', 'Unsharing the calendar in {countdown} second', 'Unsharing the calendar in {countdown} seconds', countdown, { countdown }) }}
 			</ActionButton>
 			<ActionButton
 				v-if="!calendar.isSharedWithMe"
 				icon="icon-history"
 				@click.prevent.stop="cancelDeleteCalendar">
-				{{ $n('calendar', 'Deleting the calendar in {countdown} second', 'Deleting the calendar in {countdown} seconds', countdown, { countdown }) }}
+				{{ $n('journals', 'Deleting the calendar in {countdown} second', 'Deleting the calendar in {countdown} seconds', countdown, { countdown }) }}
 			</ActionButton>
 		</template>
 
@@ -313,7 +320,7 @@ export default {
 		toggleEnabled() {
 			this.$store.dispatch('toggleCalendarEnabled', { calendar: this.calendar })
 				.catch((error) => {
-					this.$toast.error(this.$t('calendar', 'An error occurred, unable to change visibility of the calendar.'))
+					this.$toast.error(this.$t('journals', 'An error occurred, unable to change visibility of the calendar.'))
 					console.error(error)
 				})
 		},
@@ -332,7 +339,7 @@ export default {
 				try {
 					await this.$store.dispatch('deleteCalendar', { calendar: this.calendar })
 				} catch (error) {
-					this.$toast.error(this.$t('calendar', 'An error occurred, unable to delete the calendar.'))
+					this.$toast.error(this.$t('journals', 'An error occurred, unable to delete the calendar.'))
 					console.error(error)
 				} finally {
 					clearInterval(this.deleteInterval)
@@ -394,10 +401,10 @@ export default {
 
 			try {
 				await this.$copyText(url)
-				this.$toast.success(this.$t('calendar', 'Calendar link copied to clipboard.'))
+				this.$toast.success(this.$t('journals', 'Calendar link copied to clipboard.'))
 			} catch (error) {
 				console.debug(error)
-				this.$toast.error(this.$t('calendar', 'Calendar link could not be copied to clipboard.'))
+				this.$toast.error(this.$t('journals', 'Calendar link could not be copied to clipboard.'))
 			}
 		},
 		/**
@@ -432,7 +439,7 @@ export default {
 				this.showRenameInput = false
 				this.showRenameSaving = false
 			} catch (error) {
-				this.$toast(this.$t('calendar', 'An error occurred, unable to rename the calendar.'))
+				this.$toast(this.$t('journals', 'An error occurred, unable to rename the calendar.'))
 				console.error(error)
 
 				this.showRenameLabel = false
@@ -472,7 +479,7 @@ export default {
 				this.showColorInput = false
 				this.showColorSaving = false
 			} catch (error) {
-				this.$toast(this.$t('calendar', 'An error occurred, unable to change the calendar\'s color.'))
+				this.$toast(this.$t('journals', 'An error occurred, unable to change the calendar\'s color.'))
 				console.error(error)
 
 				this.showColorLabel = false

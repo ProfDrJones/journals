@@ -23,7 +23,7 @@
 	<AppNavigationItem
 		class="app-navigation-entry-new-calendar"
 		:class="{'app-navigation-entry-new-calendar--open': isOpen}"
-		:title="$t('calendar', '+ New calendar')"
+		:title="$t('journals', '+ New Journal')"
 		:menu-open.sync="isOpen"
 		menu-icon="icon-add"
 		@click.prevent.stop="toggleDialog">
@@ -32,7 +32,7 @@
 				v-if="showCreateCalendarLabel"
 				icon="icon-new-calendar"
 				@click.prevent.stop="openCreateCalendarInput">
-				{{ $t('calendar', 'New calendar') }}
+				{{ $t('journals', 'New Journal') }}
 			</ActionButton>
 			<ActionInput
 				v-if="showCreateCalendarInput"
@@ -42,14 +42,14 @@
 				v-if="showCreateCalendarSaving"
 				icon="icon-loading-small">
 				<!-- eslint-disable-next-line no-irregular-whitespace -->
-				{{ $t('calendar', 'Creating calendar …') }}
+				{{ $t('journals', 'Creating Journal …') }}
 			</ActionText>
 
 			<ActionButton
 				v-if="showCreateCalendarTaskListLabel"
 				icon="icon-new-calendar-with-task-list"
 				@click.prevent.stop="openCreateCalendarTaskListInput">
-				{{ $t('calendar', 'New calendar with task list') }}
+				{{ $t('journals', 'New calendar with task list') }}
 			</ActionButton>
 			<ActionInput
 				v-if="showCreateCalendarTaskListInput"
@@ -59,24 +59,7 @@
 				v-if="showCreateCalendarTaskListSaving"
 				icon="icon-loading-small">
 				<!-- eslint-disable-next-line no-irregular-whitespace -->
-				{{ $t('calendar', 'Creating calendar …') }}
-			</ActionText>
-
-			<ActionButton
-				v-if="showCreateSubscriptionLabel"
-				icon="icon-public"
-				@click.prevent.stop="openCreateSubscriptionInput">
-				{{ $t('calendar', 'New subscription from link (read-only)') }}
-			</ActionButton>
-			<ActionInput
-				v-if="showCreateSubscriptionInput"
-				icon="icon-public"
-				@submit.prevent.stop="createNewSubscription" />
-			<ActionText
-				v-if="showCreateSubscriptionSaving"
-				icon="icon-loading-small">
-				<!-- eslint-disable-next-line no-irregular-whitespace -->
-				{{ $t('calendar', 'Creating subscription …') }}
+				{{ $t('journals', 'Creating Journal …') }}
 			</ActionText>
 		</template>
 	</AppNavigationItem>
@@ -161,20 +144,6 @@ export default {
 			this.showCreateSubscriptionInput = false
 		},
 		/**
-		 * Opens the create subscription input
-		 */
-		openCreateSubscriptionInput() {
-			this.showCreateSubscriptionLabel = false
-			this.showCreateSubscriptionInput = true
-			this.showCreateSubscriptionSaving = false
-
-			this.showCreateCalendarLabel = true
-			this.showCreateCalendarInput = false
-
-			this.showCreateCalendarTaskListLabel = true
-			this.showCreateCalendarTaskListInput = false
-		},
-		/**
 		 * Creates a new calendar
 		 *
 		 * @param {Event} event The submit event
@@ -192,7 +161,7 @@ export default {
 				})
 			} catch (error) {
 				console.debug(error)
-				this.$toast.error(this.$t('calendar', 'An error occurred, unable to create the calendar.'))
+				this.$toast.error(this.$t('journals', 'An error occurred, unable to create the calendar.'))
 			} finally {
 				this.showCreateCalendarSaving = false
 				this.showCreateCalendarLabel = true
@@ -215,51 +184,14 @@ export default {
 				await this.$store.dispatch('appendCalendar', {
 					displayName,
 					color: uidToHexColor(displayName),
-					components: ['VEVENT', 'VTODO'],
+					components: ['VEVENT', 'VJOURNAL'],
 				})
 			} catch (error) {
 				console.debug(error)
-				this.$toast.error(this.$t('calendar', 'An error occurred, unable to create the calendar.'))
+				this.$toast.error(this.$t('journals', 'An error occurred, unable to create the calendar.'))
 			} finally {
 				this.showCreateCalendarTaskListSaving = false
 				this.showCreateCalendarTaskListLabel = true
-				this.isOpen = false
-				this.closeMenu()
-			}
-		},
-		/**
-		 * Creates a new subscription
-		 *
-		 * @param {Event} event The submit event
-		 */
-		async createNewSubscription(event) {
-			this.showCreateSubscriptionInput = false
-			this.showCreateSubscriptionSaving = true
-
-			const link = event.target.querySelector('input[type=text]').value
-			let url
-			let hostname
-			try {
-				url = new URL(link)
-				hostname = url.hostname
-			} catch (error) {
-				console.error(error)
-				this.$toast.error(this.$t('calendar', 'Please enter a valid link (starting with http://, https://, webcal://, or webcals://)'))
-				return
-			}
-
-			try {
-				await this.$store.dispatch('appendSubscription', {
-					displayName: hostname,
-					color: uidToHexColor(link),
-					source: link,
-				})
-			} catch (error) {
-				console.debug(error)
-				this.$toast.error(this.$t('calendar', 'An error occurred, unable to create the calendar.'))
-			} finally {
-				this.showCreateSubscriptionSaving = false
-				this.showCreateSubscriptionLabel = true
 				this.isOpen = false
 				this.closeMenu()
 			}

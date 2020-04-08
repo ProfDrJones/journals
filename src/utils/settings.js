@@ -29,7 +29,7 @@ import { linkTo } from '@nextcloud/router'
  */
 export function getLinkToConfig(key) {
 	return [
-		linkTo('calendar', 'index.php'),
+		linkTo('journals', 'index.php'),
 		'v1/config',
 		key,
 	].join('/')

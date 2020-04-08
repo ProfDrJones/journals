@@ -27,7 +27,6 @@ import Vuex from 'vuex'
 import calendarObjectInstance from './calendarObjectInstance'
 import calendarObjects from './calendarObjects'
 import calendars from './calendars.js'
-import contacts from './contacts.js'
 import davRestrictions from './davRestrictions'
 import fetchedTimeRanges from './fetchedTimeRanges.js'
 import importFiles from './importFiles'
@@ -42,7 +41,6 @@ export default new Vuex.Store({
 		calendarObjectInstance,
 		calendarObjects,
 		calendars,
-		contacts,
 		davRestrictions,
 		fetchedTimeRanges,
 		importFiles,

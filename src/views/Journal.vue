@@ -127,7 +127,7 @@ import dayRender from '../fullcalendar/dayRender.js'
 import { loadState } from '@nextcloud/initial-state'
 
 export default {
-	name: 'Calendar',
+	name: 'Journal',
 	components: {
 		EmptyCalendar,
 		Settings,

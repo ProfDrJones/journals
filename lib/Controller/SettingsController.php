@@ -77,9 +77,12 @@ class SettingsController extends Controller {
 		switch ($key) {
 			case 'view':
 				return $this->setView($value);
-			// add new settings here
-			//case 'showWeekends':
-			//	return $this->showWeekends($value);
+			case 'defaultJournal':
+				return $this->setDefaultJournal($value);
+			case 'defaultJournalEntryAllDay':
+				return $this->setDefaultJournalEntryAllDay($value);
+			case 'timezone':
+				return $this->setTimezone($value);
 			case 'firstRun':
 				return $this->setFirstRun();
 			default:
@@ -125,6 +128,69 @@ class SettingsController extends Controller {
 				$this->appName,
 				'firstRun',
 				'no'
+			);
+		} catch(\Exception $e) {
+			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * sets display timezone for user
+	 *
+	 * @param string $value User-selected option for timezone to display events in
+	 * @return JSONResponse
+	 */
+	private function setTimezone(string $value):JSONResponse {
+		try {
+			$this->config->setUserValue(
+				$this->userId,
+				$this->appName,
+				'timezone',
+				$value
+			);
+		} catch(\Exception $e) {
+			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * sets display timezone for user
+	 *
+	 * @param string $value User-selected option for timezone to display events in
+	 * @return JSONResponse
+	 */
+	private function setDefaultJournal(string $value):JSONResponse {
+		try {
+			$this->config->setUserValue(
+				$this->userId,
+				$this->appName,
+				'defaultJournal',
+				$value
+			);
+		} catch(\Exception $e) {
+			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
+		}
+
+		return new JSONResponse();
+	}
+
+	/**
+	 * sets display timezone for user
+	 *
+	 * @param string $value User-selected option for timezone to display events in
+	 * @return JSONResponse
+	 */
+	private function setDefaultJournalEntryAllDay(string $value):JSONResponse {
+		try {
+			$this->config->setUserValue(
+				$this->userId,
+				$this->appName,
+				'defaultJournalEntryAllDay',
+				$value
 			);
 		} catch(\Exception $e) {
 			return new JSONResponse([], Http::STATUS_INTERNAL_SERVER_ERROR);
