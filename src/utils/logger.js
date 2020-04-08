@@ -25,12 +25,8 @@ import { getCurrentUser } from '@nextcloud/auth'
 const builder = getLoggerBuilder()
 const user = getCurrentUser()
 
-builder.setApp('calendar')
-if (user) {
-	builder.setUid('authenticated:' + user.uid)
-} else {
-	builder.setUid('unauthenticated')
-}
+builder.setApp('journals')
+builder.setUid('authenticated:' + user.uid)
 
 const logger = builder.build()
 export default logger

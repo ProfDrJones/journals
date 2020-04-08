@@ -130,7 +130,6 @@
 		<template v-if="!deleteTimeout">
 			<div v-show="shareMenuOpen" class="sharing-section">
 				<CalendarListItemSharingSearch v-if="calendar.canBeShared" :calendar="calendar" />
-				<CalendarListItemSharingPublishItem v-if="calendar.canBePublished" :calendar="calendar" />
 				<CalendarListItemSharingShareItem v-for="sharee in calendar.shares"
 					v-show="shareMenuOpen"
 					:key="sharee.uri"
@@ -157,7 +156,6 @@ import {
 
 import AppNavigationDisabledCalendarIconBullet from './AppNavigationDisabledCalendarIconBullet.vue'
 import CalendarListItemSharingSearch from './CalendarListItemSharingSearch.vue'
-import CalendarListItemSharingPublishItem from './CalendarListItemSharingPublishItem.vue'
 import CalendarListItemSharingShareItem from './CalendarListItemSharingShareItem.vue'
 
 export default {
@@ -173,7 +171,6 @@ export default {
 		AppNavigationIconBullet,
 		AppNavigationItem,
 		CalendarListItemSharingSearch,
-		CalendarListItemSharingPublishItem,
 		CalendarListItemSharingShareItem,
 	},
 	directives: {
@@ -219,7 +216,7 @@ export default {
 		 * @returns {Boolean}
 		 */
 		showSharingIcon() {
-			return this.calendar.canBeShared || this.calendar.canBePublished
+			return this.calendar.canBeShared || this.isPublished
 		},
 		/**
 		 * The sharing icon class.
@@ -235,11 +232,9 @@ export default {
 			if (this.isPublished) {
 				return 'icon-public'
 			}
-
 			if (this.isShared) {
 				return 'icon-shared'
 			}
-
 			return 'icon-share'
 		},
 		/**

@@ -45,9 +45,5 @@ export function getPrefixedRoute(currentRouteName, toRouteName) {
 		return 'Embed' + toRouteName
 	}
 
-	if (currentRouteName.startsWith('Public')) {
-		return 'Public' + toRouteName
-	}
-
 	return toRouteName
 }

@@ -20,17 +20,15 @@
   -->
 
 <template>
-	<Content app-name="calendar" :class="classNames">
+	<Content app-name="calendar">
 		<AppNavigation>
 			<!-- Date Picker, View Buttons, Today Button -->
-			<AppNavigationHeader :is-public="!isAuthenticatedUser" />
+			<AppNavigationHeader />
 			<!-- Calendar / Subscription List -->
 			<CalendarList
-				:is-public="!isAuthenticatedUser"
 				:loading-calendars="loadingCalendars" />
 			<!-- Settings and import -->
 			<Settings
-				v-if="isAuthenticatedUser"
 				:loading-calendars="loadingCalendars" />
 		</AppNavigation>
 		<AppContent>
@@ -40,7 +38,7 @@
 				:default-view="defaultView"
 				:editable="isEditable"
 				:force-event-duration="true"
-				:header="showHeader"
+				:header="false"
 				:height="windowResize"
 				:week-numbers="true"
 				:weekends="true"
@@ -54,7 +52,7 @@
 				:locales="locales"
 				:locale="fullCalendarLocale"
 				:first-day="firstDay"
-				:selectable="isSelectable"
+				:selectable="true"
 				:time-grid-event-min-height="16"
 				:select-mirror="true"
 				:lazy-fetching="false"
@@ -71,8 +69,6 @@
 				@eventResize="eventResize"
 				@select="select" />
 
-			<EmptyCalendar
-				v-if="showEmptyCalendarScreen" />
 		</AppContent>
 		<!-- Edit modal -->
 		<router-view v-if="!loadingCalendars" />
@@ -119,7 +115,6 @@ import {
 	mapState,
 } from 'vuex'
 import eventRender from '../fullcalendar/eventRender.js'
-import EmptyCalendar from '../components/EmptyCalendar.vue'
 import { getLocale } from '@nextcloud/l10n'
 import loadMomentLocalization from '../utils/moment.js'
 import windowResize from '../fullcalendar/windowResize.js'
@@ -129,7 +124,6 @@ import { loadState } from '@nextcloud/initial-state'
 export default {
 	name: 'Calendar',
 	components: {
-		EmptyCalendar,
 		Settings,
 		CalendarList,
 		AppNavigationHeader,
@@ -144,7 +138,6 @@ export default {
 			timeFrameCacheExpiryJob: null,
 			updateTodayJob: null,
 			updateTodayJobPreviousDate: null,
-			showEmptyCalendarScreen: false,
 			fullCalendarLocale: 'en',
 			locales: [],
 			firstDay: 0,
@@ -181,28 +174,7 @@ export default {
 		},
 		isEditable() {
 			// We do not allow drag and drop when the editor is open.
-			return !this.isPublicShare
-				&& this.$route.name !== 'EditPopoverView'
-				&& this.$route.name !== 'EditSidebarView'
-		},
-		isSelectable() {
-			return !this.isPublicShare
-		},
-		isAuthenticatedUser() {
-			return !this.isPublicShare
-		},
-		isPublicShare() {
-			return this.$route.name.startsWith('Public')
-		},
-		showHeader() {
-			return this.isPublicShare
-		},
-		classNames() {
-			if (this.isPublicShare) {
-				return 'app-calendar-public'
-			}
-
-			return null
+			return this.$route.name !== 'EditSidebarView'
 		},
 		eventOrder() {
 			return ['start', '-duration', 'allDay', eventOrder]
@@ -278,47 +250,36 @@ export default {
 		})
 		this.$store.dispatch('initializeCalendarJsConfig')
 
-		if (this.$route.name.startsWith('Public')) {
-			client._createPublicCalendarHome()
-			const tokens = this.$route.params.tokens.split('-')
-			const calendars = await this.$store.dispatch('getPublicCalendars', { tokens })
-			this.loadingCalendars = false
-
-			if (calendars.length === 0) {
-				this.showEmptyCalendarScreen = true
+		await client.connect({ enableCalDAV: true })
+		await this.$store.dispatch('fetchCurrentUserPrincipal')
+		const calendars = await this.$store.dispatch('getCalendars')
+		const owners = []
+		calendars.forEach((calendar) => {
+			if (owners.indexOf(calendar.owner) === -1) {
+				owners.push(calendar.owner)
 			}
-		} else {
-			await client.connect({ enableCalDAV: true })
-			await this.$store.dispatch('fetchCurrentUserPrincipal')
-			const calendars = await this.$store.dispatch('getCalendars')
-			const owners = []
-			calendars.forEach((calendar) => {
-				if (owners.indexOf(calendar.owner) === -1) {
-					owners.push(calendar.owner)
-				}
+		})
+		owners.forEach((owner) => {
+			this.$store.dispatch('fetchPrincipalByUrl', {
+				url: owner,
 			})
-			owners.forEach((owner) => {
-				this.$store.dispatch('fetchPrincipalByUrl', {
-					url: owner,
-				})
+		})
+
+		const writeableCalendarIndex = calendars.findIndex((calendar) => {
+			return !calendar.readOnly
+		})
+
+		// No writeable calendars? Create a new one!
+		if (writeableCalendarIndex === -1) {
+			this.loadingCalendars = true
+			await this.$store.dispatch('appendCalendar', {
+				displayName: this.$t('calendars', 'Personal'),
+				color: uidToHexColor(this.$t('calendars', 'Personal')),
+				order: 0,
 			})
-
-			const writeableCalendarIndex = calendars.findIndex((calendar) => {
-				return !calendar.readOnly
-			})
-
-			// No writeable calendars? Create a new one!
-			if (writeableCalendarIndex === -1) {
-				this.loadingCalendars = true
-				await this.$store.dispatch('appendCalendar', {
-					displayName: this.$t('calendars', 'Personal'),
-					color: uidToHexColor(this.$t('calendars', 'Personal')),
-					order: 0,
-				})
-			}
-
-			this.loadingCalendars = false
 		}
+
+		this.loadingCalendars = false
 	},
 	async mounted() {
 		if (this.timezone === 'automatic' && this.timezoneId === 'UTC') {
@@ -339,9 +300,7 @@ export default {
 	},
 	methods: {
 		saveNewView: debounce(function(initialView) {
-			if (this.isAuthenticatedUser) {
-				this.$store.dispatch('setInitialView', { initialView })
-			}
+			this.$store.dispatch('setInitialView', { initialView })
 		}, 5000),
 		dayRender(...args) {
 			return dayRender(...args)

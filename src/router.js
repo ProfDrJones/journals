@@ -31,6 +31,7 @@ import Router from 'vue-router'
 import { getRootUrl, generateUrl } from '@nextcloud/router'
 
 import Calendar from './views/Calendar'
+import EditSidebar from './views/EditSidebar'
 import Timeline from './views/Timeline'
 import Journal from './views/Journal'
 import { getInitialView } from './utils/router.js'

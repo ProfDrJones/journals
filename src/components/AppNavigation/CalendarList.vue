@@ -32,7 +32,7 @@
 		name="list"
 		tag="ul">
 		<CalendarListItemLoadingPlaceholder v-if="loadingCalendars" :key="loadingKeyCalendars" />
-		<AppNavigationCaption :key="journalsCaptionKey" :title="journalTitle" />
+		<AppNavigationCaption :key="journalsCaptionKey" :title="journalsTitle" />
 		<CalendarListItem
 			v-for="calendar in journalCalendars"
 			:key="calendar.id"
@@ -67,10 +67,6 @@ export default {
 		CalendarListItemLoadingPlaceholder,
 	},
 	props: {
-		isPublic: {
-			type: Boolean,
-			required: true,
-		},
 		loadingCalendars: {
 			type: Boolean,
 			default: false,

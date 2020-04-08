@@ -35,9 +35,11 @@ const getDefaultCalendarObject = (props = {}) => Object.assign({}, {
 	displayName: '',
 	// Color of the calendar
 	color: uidToHexColor(''),
-	// Whether or not the calendar is visible in the grid
+	// Whether or not the calendar is visible in the view
 	enabled: true,
-	// Whether or not the calendar is loading events at the moment
+	// Whether or not the journal is visible in the view
+	enabledJournal: true,
+	// Whether or not the calendar is loading objects at the moment
 	loading: false,
 	// Whether this calendar supports VEvents
 	supportsEvents: true,
@@ -105,20 +107,10 @@ const mapDavCollectionToCalendar = (calendar, currentUserPrincipal) => {
 	const timezone = calendar.timezone || null
 
 	let isSharedWithMe = false
-	if (!currentUserPrincipal) {
-		// If the user is not authenticated, the calendar
-		// will always be marked as shared with them
-		isSharedWithMe = true
-	} else {
-		isSharedWithMe = (owner !== currentUserPrincipal.url)
-	}
+	isSharedWithMe = (owner !== currentUserPrincipal.url)
 
 	let enabled
-	if (!currentUserPrincipal) {
-		// If the user is not authenticated,
-		// always enable the calendar
-		enabled = true
-	} else if (typeof calendar.enabled === 'boolean') {
+	if (typeof calendar.enabled === 'boolean') {
 		// If calendar-enabled is set, we will just take that
 		enabled = calendar.enabled
 	} else {
@@ -126,6 +118,17 @@ const mapDavCollectionToCalendar = (calendar, currentUserPrincipal) => {
 		// we will display the calendar by default if it's owned by the user
 		// or hide it by default it it's just shared with them
 		enabled = !isSharedWithMe
+	}
+
+	let enabledJournal
+	if (typeof calendar.enabledJournal === 'boolean') {
+		// If calendar-enabled is set, we will just take that
+		enabledJournal = calendar.enabledJournal
+	} else {
+		// If there is no calendar-enabled,
+		// we will display the calendar by default if it's owned by the user
+		// or hide it by default it it's just shared with them
+		enabledJournal = !isSharedWithMe
 	}
 
 	const shares = []
@@ -146,6 +149,7 @@ const mapDavCollectionToCalendar = (calendar, currentUserPrincipal) => {
 		order,
 		url,
 		enabled,
+		enabledJournal,
 		supportsEvents,
 		supportsJournals,
 		supportsTasks,
