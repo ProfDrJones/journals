@@ -97,3 +97,6 @@ coverage/
 
 js/public
 css/public
+
+### Visual Studio Code ###
+.vscode/*
