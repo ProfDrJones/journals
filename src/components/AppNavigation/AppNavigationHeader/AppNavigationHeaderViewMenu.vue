@@ -59,7 +59,7 @@ export default {
 		},
 		defaultIcon() {
 			for (const view of this.views) {
-				if (view.id === this.$route.params.view) {
+				if (view.id === this.$route.name) {
 					return view.icon
 				}
 			}

@@ -128,6 +128,8 @@ export default {
 		this.$store.commit('loadSettingsFromServer', {
 			appVersion: loadState('journals', 'app_version'),
 			firstRun: loadState('journals', 'first_run'),
+			defaultJournal: loadState('journals', 'defaultJournal'),
+			defaultJournalEntryAllDay: loadState('journals', 'defaultJournalEntryAllDay'),
 			timezone: loadState('journals', 'timezone'),
 		})
 		this.$store.dispatch('initializeCalendarJsConfig')

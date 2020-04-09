@@ -21,7 +21,7 @@
   -->
 
 <template>
-	<button class="button primary new-event" @click="newEvent">
+	<button class="button primary new-event" @click="newJournalEntry">
 		{{ $t('journals', '+ New Journal Entry') }}
 	</button>
 </template>
@@ -32,8 +32,8 @@ import { dateFactory } from '../../../utils/date'
 export default {
 	name: 'AppNavigationHeaderNewJournalEntry',
 	methods: {
-		newEvent() {
-			const name = 'NewSidebarView'
+		newJournalEntry() {
+			const name = 'JournalView'
 
 			const start = dateFactory()
 			// Setting a value greater than 23 is actually supported with the expected behavior:

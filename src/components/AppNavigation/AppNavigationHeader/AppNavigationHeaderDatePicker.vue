@@ -82,33 +82,30 @@ export default {
 			return getDateFromFirstdayParam(this.$route.params.firstDay)
 		},
 		previousLabel() {
-			switch (this.view) {
-			case 'timeGridDay':
-				return this.$t('calendar', 'Previous day')
-
-			case 'timeGridWeek':
-				return this.$t('calendar', 'Previous week')
-
-			case 'dayGridMonth':
+			switch (this.viewName) {
+			case 'CalendarView':
+				return this.$t('journals', 'Previous month')
 			default:
-				return this.$t('calendar', 'Previous month')
+				return this.$t('journals', 'Previous week')
 			}
 		},
 		nextLabel() {
-			switch (this.view) {
-			case 'timeGridDay':
-				return this.$t('calendar', 'Next day')
-
-			case 'timeGridWeek':
-				return this.$t('calendar', 'Next week')
-
-			case 'dayGridMonth':
+			switch (this.viewName) {
+			case 'CalendarView':
+				return this.$t('journals', 'Next month')
 			default:
-				return this.$t('calendar', 'Next month')
+				return this.$t('journals', 'Next week')
+
 			}
 		},
+		viewName() {
+			return this.$route.name
+		},
 		view() {
-			return this.$route.params.view
+			if (this.viewName === 'CalendarView') {
+				return 'dayGridMonth'
+			}
+			return 'timeGridWeek'
 		},
 	},
 	methods: {
@@ -121,29 +118,16 @@ export default {
 		navigateTimeRangeByFactor(factor) {
 			let newDate
 
-			switch (this.$route.params.view) {
-			case 'timeGridDay':
+			switch (this.$route.name) {
+			case 'CalendarView':
 				newDate = modifyDate(this.selectedDate, {
-					day: factor,
+					month: factor,
 				})
 				break
 
-			case 'timeGridWeek':
+			default: {
 				newDate = modifyDate(this.selectedDate, {
 					week: factor,
-				})
-				break
-
-			case 'dayGridMonth':
-			default: {
-				// modifyDate is just adding one month, so we have to manually
-				// set the date of month to 1. Otherwise if your date is set to
-				// January 30th and you add one month, February 30th doesn't exist
-				// and it automatically changes to March 1st. Same happens on March 31st.
-				const firstDayOfCurrentMonth = new Date(this.selectedDate.getTime())
-				firstDayOfCurrentMonth.setDate(1)
-				newDate = modifyDate(firstDayOfCurrentMonth, {
-					month: factor,
 				})
 				break
 			}

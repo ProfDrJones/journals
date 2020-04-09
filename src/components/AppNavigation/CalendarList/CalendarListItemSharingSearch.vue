@@ -31,7 +31,7 @@
 			:internal-search="false"
 			:max-height="600"
 			:show-no-results="true"
-			:placeholder="$t('calendar', 'Share with users or groups')"
+			:placeholder="$t('journals', 'Share with users or groups')"
 			:class="{ 'showContent': inputGiven, 'icon-loading': isLoading }"
 			:user-select="true"
 			open-direction="bottom"
@@ -39,7 +39,7 @@
 			label="user"
 			@search-change="findSharee"
 			@change="shareCalendar">
-			<span slot="noResult">{{ $t('calendar', 'No users or groups') }}</span>
+			<span slot="noResult">{{ $t('journals', 'No users or groups') }}</span>
 		</Multiselect>
 	</li>
 </template>

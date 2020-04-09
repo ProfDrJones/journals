@@ -29,34 +29,34 @@
 		@click.prevent.stop="toggleDialog">
 		<template slot="actions">
 			<ActionButton
-				v-if="showCreateCalendarLabel"
+				v-if="showCreateJournalLabel"
 				icon="icon-new-calendar"
-				@click.prevent.stop="openCreateCalendarInput">
+				@click.prevent.stop="openCreateJournalInput">
 				{{ $t('journals', 'New Journal') }}
 			</ActionButton>
 			<ActionInput
-				v-if="showCreateCalendarInput"
+				v-if="showCreateJournalInput"
 				icon="icon-new-calendar"
-				@submit.prevent.stop="createNewCalendar" />
+				@submit.prevent.stop="createNewJournal" />
 			<ActionText
-				v-if="showCreateCalendarSaving"
+				v-if="showCreateJournalSaving"
 				icon="icon-loading-small">
 				<!-- eslint-disable-next-line no-irregular-whitespace -->
 				{{ $t('journals', 'Creating Journal …') }}
 			</ActionText>
 
 			<ActionButton
-				v-if="showCreateCalendarTaskListLabel"
-				icon="icon-new-calendar-with-task-list"
-				@click.prevent.stop="openCreateCalendarTaskListInput">
+				v-if="showCreateCalendarJournalLabel"
+				icon="icon-new-calendar-with-journal"
+				@click.prevent.stop="openCreateCalendarJournalInput">
 				{{ $t('journals', 'New calendar with task list') }}
 			</ActionButton>
 			<ActionInput
-				v-if="showCreateCalendarTaskListInput"
-				icon="icon-new-calendar-with-task-list"
-				@submit.prevent.stop="createNewCalendarTaskList" />
+				v-if="showCreateCalendarJournalInput"
+				icon="icon-new-calendar-with-journal"
+				@submit.prevent.stop="createNewCalendarJournal" />
 			<ActionText
-				v-if="showCreateCalendarTaskListSaving"
+				v-if="showCreateCalendarJournalSaving"
 				icon="icon-loading-small">
 				<!-- eslint-disable-next-line no-irregular-whitespace -->
 				{{ $t('journals', 'Creating Journal …') }}
@@ -85,18 +85,14 @@ export default {
 		return {
 			// Open state
 			isOpen: false,
-			// New calendar
-			showCreateCalendarLabel: true,
-			showCreateCalendarInput: false,
-			showCreateCalendarSaving: false,
-			// New calendar with task list
-			showCreateCalendarTaskListLabel: true,
-			showCreateCalendarTaskListInput: false,
-			showCreateCalendarTaskListSaving: false,
-			// New subscription
-			showCreateSubscriptionLabel: true,
-			showCreateSubscriptionInput: false,
-			showCreateSubscriptionSaving: false,
+			// New Journal
+			showCreateJournalLabel: true,
+			showCreateJournalInput: false,
+			showCreateJournalSaving: false,
+			// New calendar with journals
+			showCreateCalendarJournalLabel: true,
+			showCreateCalendarJournalInput: false,
+			showCreateCalendarJournalSaving: false,
 		}
 	},
 	watch: {
@@ -118,39 +114,33 @@ export default {
 		/**
 		 * Opens the create calendar input
 		 */
-		openCreateCalendarInput() {
-			this.showCreateCalendarLabel = false
-			this.showCreateCalendarInput = true
-			this.showCreateCalendarSaving = false
+		openCreateJournalInput() {
+			this.showCreateJournalLabel = false
+			this.showCreateJournalInput = true
+			this.showCreateJournalSaving = false
 
-			this.showCreateCalendarTaskListLabel = true
-			this.showCreateCalendarTaskListInput = false
-
-			this.showCreateSubscriptionLabel = true
-			this.showCreateSubscriptionInput = false
+			this.showCreateCalendarJournalLabel = true
+			this.showCreateCalendarJournalInput = false
 		},
 		/**
 		 * Opens the create calendar with task list input
 		 */
-		openCreateCalendarTaskListInput() {
-			this.showCreateCalendarTaskListLabel = false
-			this.showCreateCalendarTaskListInput = true
-			this.showCreateCalendarTaskListSaving = false
+		openCreateCalendarJournalInput() {
+			this.showCreateCalendarJournalLabel = false
+			this.showCreateCalendarJournalInput = true
+			this.showCreateCalendarJournalSaving = false
 
-			this.showCreateCalendarLabel = true
-			this.showCreateCalendarInput = false
-
-			this.showCreateSubscriptionLabel = true
-			this.showCreateSubscriptionInput = false
+			this.showCreateJournalLabel = true
+			this.showCreateJournalInput = false
 		},
 		/**
 		 * Creates a new calendar
 		 *
 		 * @param {Event} event The submit event
 		 */
-		async createNewCalendar(event) {
-			this.showCreateCalendarInput = false
-			this.showCreateCalendarSaving = true
+		async createNewJournal(event) {
+			this.showCreateJournalInput = false
+			this.showCreateJournalSaving = true
 
 			const displayName = event.target.querySelector('input[type=text]').value
 
@@ -158,13 +148,14 @@ export default {
 				await this.$store.dispatch('appendCalendar', {
 					displayName,
 					color: uidToHexColor(displayName),
+					components: ['VJOURNAL'],
 				})
 			} catch (error) {
 				console.debug(error)
 				this.$toast.error(this.$t('journals', 'An error occurred, unable to create the calendar.'))
 			} finally {
-				this.showCreateCalendarSaving = false
-				this.showCreateCalendarLabel = true
+				this.showCreateJournalSaving = false
+				this.showCreateJournalLabel = true
 				this.isOpen = false
 				this.closeMenu()
 			}
@@ -174,9 +165,9 @@ export default {
 		 *
 		 * @param {Event} event The submit event
 		 */
-		async createNewCalendarTaskList(event) {
-			this.showCreateCalendarTaskListInput = false
-			this.showCreateCalendarTaskListSaving = true
+		async createNewCalendarJournal(event) {
+			this.showCreateCalendarJournalInput = false
+			this.showCreateCalendarJournalSaving = true
 
 			const displayName = event.target.querySelector('input[type=text]').value
 
@@ -190,8 +181,8 @@ export default {
 				console.debug(error)
 				this.$toast.error(this.$t('journals', 'An error occurred, unable to create the calendar.'))
 			} finally {
-				this.showCreateCalendarTaskListSaving = false
-				this.showCreateCalendarTaskListLabel = true
+				this.showCreateCalendarJournalSaving = false
+				this.showCreateCalendarJournalLabel = true
 				this.isOpen = false
 				this.closeMenu()
 			}
@@ -200,15 +191,12 @@ export default {
 		 * This resets the actions on close of menu
 		 */
 		closeMenu() {
-			this.showCreateCalendarLabel = true
-			this.showCreateCalendarInput = false
-			this.showCreateCalendarSaving = false
-			this.showCreateCalendarTaskListLabel = true
-			this.showCreateCalendarTaskListInput = false
-			this.showCreateCalendarTaskListSaving = false
-			this.showCreateSubscriptionLabel = true
-			this.showCreateSubscriptionInput = false
-			this.showCreateSubscriptionSaving = false
+			this.showCreateJournalLabel = true
+			this.showCreateJournalInput = false
+			this.showCreateJournalSaving = false
+			this.showCreateCalendarJournalLabel = true
+			this.showCreateCalendarJournalInput = false
+			this.showCreateCalendarJournalSaving = false
 		},
 	},
 }

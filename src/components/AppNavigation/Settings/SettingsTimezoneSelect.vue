@@ -58,9 +58,9 @@ export default {
 		 */
 		additionalTimezones() {
 			return [{
-				continent: this.$t('calendar', 'Automatic'),
+				continent: this.$t('journals', 'Automatic'),
 				timezoneId: 'automatic',
-				label: this.$t('calendar', 'Automatic ({detected})', {
+				label: this.$t('journals', 'Automatic ({detected})', {
 					detected: detectTimezone(),
 				}),
 			}]
@@ -76,7 +76,7 @@ export default {
 			this.$store.dispatch('setTimezone', { timezoneId })
 				.catch((error) => {
 					console.error(error)
-					this.$toast(this.$t('calendar', 'New setting was not saved successfully.'))
+					this.$toast(this.$t('journals', 'New setting was not saved successfully.'))
 				})
 		},
 	},

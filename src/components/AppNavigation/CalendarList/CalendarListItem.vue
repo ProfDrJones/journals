@@ -44,14 +44,17 @@
 			@click.prevent.stop="toggleEnabled" />
 
 		<template v-if="!deleteTimeout" slot="counter">
-			<Actions v-if="showSharingIcon">
+			<Actions v-if="supportsJournals" @click="setDefaultCalendar">
+				<ActionButton :icon="starIconClass" />
+			</Actions>
+			<Actions v-if="showSharingIcon" :disabled="!supportsJournals">
 				<ActionButton :icon="sharingIconClass" @click="toggleShareMenu" />
 			</Actions>
 			<Avatar v-if="isSharedWithMe && loadedOwnerPrincipal" :user="ownerUserId" :display-name="ownerDisplayname" />
 			<div v-if="isSharedWithMe && !loadedOwnerPrincipal" class="icon icon-loading" />
 		</template>
 
-		<template v-if="!deleteTimeout" slot="actions">
+		<template v-if="!deleteTimeout && supportsOnlyJournals" slot="actions">
 			<ActionButton
 				v-if="showRenameLabel"
 				icon="icon-rename"
@@ -112,7 +115,7 @@
 			</ActionButton>
 		</template>
 
-		<template v-if="!!deleteTimeout" slot="actions">
+		<template v-if="!!deleteTimeout && supportsJournals" slot="actions">
 			<ActionButton
 				v-if="calendar.isSharedWithMe"
 				icon="icon-history"
@@ -124,6 +127,14 @@
 				icon="icon-history"
 				@click.prevent.stop="cancelDeleteCalendar">
 				{{ $n('journals', 'Deleting the calendar in {countdown} second', 'Deleting the calendar in {countdown} seconds', countdown, { countdown }) }}
+			</ActionButton>
+		</template>
+
+		<template v-if="!supportsJournals && !isSharedWithMe" slot="actions">
+			<ActionButton
+				icon="icon-add"
+				@click.prevent.stop="addJournalSupport">
+				{{ $t('journals', 'Add to Journals') }}
 			</ActionButton>
 		</template>
 
@@ -216,7 +227,7 @@ export default {
 		 * @returns {Boolean}
 		 */
 		showSharingIcon() {
-			return this.calendar.canBeShared || this.isPublished
+			return (this.addJournalSupport && this.calendar.canBeShared) || this.isPublished || this.isShared
 		},
 		/**
 		 * The sharing icon class.
@@ -237,6 +248,14 @@ export default {
 			}
 			return 'icon-share'
 		},
+
+		starIconClass() {
+			if (this.calendar.id === 'DDiary') {
+				return 'icon-stared'
+			}
+			return 'icon-star'
+		},
+
 		/**
 		 * Whether or not the calendar is either shared or published
 		 * This is used to figure out whether or not to display the Shared label
@@ -270,6 +289,27 @@ export default {
 		isPublished() {
 			return !!this.calendar.publishURL
 		},
+		/**
+		 * Does the calendar support VJOURNAL
+		 *
+		 * @returns {Boolean}
+		 */
+		supportsJournals() {
+			return this.calendar.supportsJournals
+		},
+		/**
+		 * Is the calendar a pure Journal Calendar
+		 *
+		 * @returns {Boolean}
+		 */
+		supportsOnlyJournals() {
+			return this.calendar.supportsOnlyJournals
+		},
+
+		isDefault() {
+			return true
+		},
+
 		/**
 		 * TODO: this should use principals and principal.userId
 		 *
@@ -383,6 +423,20 @@ export default {
 		toggleShareMenu() {
 			this.shareMenuOpen = !this.shareMenuOpen
 			console.debug('toggled share menu')
+		},
+
+		/**
+		 * Selects the calendar as default for Journals
+		 */
+		setDefaultCalendar() {
+			console.debug('toggled default Journal')
+		},
+
+		/**
+		 * Adds VJOURNAL Support to an existing calendar
+		 */
+		addJournalSupport() {
+			console.debug('toggled addJournalSupport')
 		},
 		/**
 		 * Copies the private calendar link

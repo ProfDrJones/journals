@@ -21,17 +21,47 @@
 
 <template>
 	<AppContent>
-		<div>Here is the Journal View Content</div>
+		<template v-slot:primary-actions style="max-height: none !important">
+			<PropertyTitleTimePicker
+				:start-date="startDate"
+				:start-timezone="startTimezone"
+				:is-all-day="isAllDay" />
+		</template>
+
+		<div v-if="displayDetails">
+			<PropertyCalendarPicker
+				:calendars="calendars"
+				:calendar="selectedCalendar"
+				:is-read-only="isReadOnly"
+				@selectCalendar="changeCalendar" />
+		</div>
+		<SaveButtons
+			class="app-sidebar-tab__buttons"
+			:can-create-recurrence-exception="canCreateRecurrenceException"
+			:is-new="isNew"
+			:force-this-and-all-future="forceThisAndAllFuture"
+			@saveThisOnly="saveAndLeave(false)"
+			@saveThisAndAllFuture="saveAndLeave(true)" />
 	</AppContent>
 </template>
 
 <script>
 import AppContent from '@nextcloud/vue/dist/Components/AppContent'
+import PropertyTitleTimePicker from '../components/Editor/Properties/PropertyTitleTimePicker'
+import PropertyCalendarPicker from '../components/Editor/Properties/PropertyCalendarPicker'
+import SaveButtons from '../components/Editor/SaveButtons.vue'
+import EditorMixin from '../mixins/EditorMixin'
 
 export default {
 	name: 'Journal',
 	components: {
 		AppContent,
+		PropertyTitleTimePicker,
+		PropertyCalendarPicker,
+		SaveButtons,
 	},
+	mixins: [
+		EditorMixin,
+	],
 }
 </script>

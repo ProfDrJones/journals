@@ -37,11 +37,11 @@ const state = {
 const mutations = {
 
 	/**
-	 * Updates the user's timezone
+	 * Updates the user's default Journal
 	 *
 	 * @param {Object} state The Vuex state
 	 * @param {Object} data The destructuring object
-	 * @param {String} data.timezoneId The new timezone
+	 * @param {String} data.calendarID The new JournalID
 	 */
 	setDefaultJournal(state, { calendarID }) {
 		state.DefaultJournal = calendarID

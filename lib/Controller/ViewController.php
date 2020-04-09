@@ -97,11 +97,15 @@ class ViewController extends Controller {
 		$appVersion = $this->config->getAppValue($this->appName, 'installed_version');
 		$firstRun = $this->config->getUserValue($this->userId, $this->appName, 'firstRun', 'yes') === 'yes';
 		$initialView = $this->config->getUserValue($this->userId, $this->appName, 'currentView', $defaultInitialView);
+		$defaultJournal = $this->config->getUserValue($this->userId, $this->appName, 'defaultJournal', 'none');
+		$defaultJournalEntryAllDay = $this->config->getUserValue($this->userId, $this->appName, 'defaultJournalEntryAllDay', 'yes') === 'yes';
 		$timezone = $this->config->getUserValue($this->userId, $this->appName, 'timezone', $defaultTimezone);
 
 		$this->initialStateService->provideInitialState($this->appName, 'app_version', $appVersion);
 		$this->initialStateService->provideInitialState($this->appName, 'first_run', $firstRun);
 		$this->initialStateService->provideInitialState($this->appName, 'initial_view', $initialView);
+		$this->initialStateService->provideInitialState($this->appName, 'defaultJournal', $defaultJournal);
+		$this->initialStateService->provideInitialState($this->appName, 'defaultJournalEntryAllDay', $defaultJournalEntryAllDay);
 		$this->initialStateService->provideInitialState($this->appName, 'timezone', $timezone);
 
 		return new TemplateResponse($this->appName, 'main');

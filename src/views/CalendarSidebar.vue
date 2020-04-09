@@ -33,6 +33,7 @@
 			:event-sources="eventSources"
 			:event-order="eventOrder"
 			:plugins="plugins"
+			:time-zone="timezoneId"
 			:default-date="defaultDate"
 			:locales="locales"
 			:locale="fullCalendarLocale"
@@ -50,6 +51,9 @@
 </template>
 
 <script>
+import {
+	mapGetters,
+} from 'vuex'
 import AppSidebar from '@nextcloud/vue/dist/Components/AppSidebar'
 import FullCalendar from '@fullcalendar/vue'
 import '@fullcalendar/core/main.css'
@@ -80,6 +84,9 @@ export default {
 		}
 	},
 	computed: {
+		...mapGetters({
+			timezoneId: 'getResolvedTimezone',
+		}),
 		eventSources() {
 			return this.$store.getters.enabledCalendars.map(eventSource(this.$store))
 		},

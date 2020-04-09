@@ -45,6 +45,8 @@ const getDefaultCalendarObject = (props = {}) => Object.assign({}, {
 	supportsEvents: true,
 	// Whether this calendar supports VJournals
 	supportsJournals: false,
+	// Whether this calendar only supports VJournals
+	supportsOnlyJournals: false,
 	// Whether this calendar supports VTodos
 	supportsTasks: false,
 	// The principal uri of the owner
@@ -96,6 +98,7 @@ const mapDavCollectionToCalendar = (calendar, currentUserPrincipal) => {
 
 	const supportsEvents = calendar.components.includes('VEVENT')
 	const supportsJournals = calendar.components.includes('VJOURNAL')
+	const supportsOnlyJournals = calendar.components.includes('VJOURNAL') && calendar.components.length === 1
 	const supportsTasks = calendar.components.includes('VTODO')
 	const owner = calendar.owner
 	const readOnly = !calendar.isWriteable()
@@ -152,6 +155,7 @@ const mapDavCollectionToCalendar = (calendar, currentUserPrincipal) => {
 		enabledJournal,
 		supportsEvents,
 		supportsJournals,
+		supportsOnlyJournals,
 		supportsTasks,
 		isSharedWithMe,
 		owner,

@@ -158,9 +158,9 @@ class SettingsController extends Controller {
 	}
 
 	/**
-	 * sets display timezone for user
+	 * sets display defaultJournal for user
 	 *
-	 * @param string $value User-selected option for timezone to display events in
+	 * @param string $value User-selected option for the default Journal to use when creating Journal entries
 	 * @return JSONResponse
 	 */
 	private function setDefaultJournal(string $value):JSONResponse {
@@ -179,9 +179,9 @@ class SettingsController extends Controller {
 	}
 
 	/**
-	 * sets display timezone for user
+	 * sets display setDefaultJournalEntryAllDay for user
 	 *
-	 * @param string $value User-selected option for timezone to display events in
+	 * @param string $value User-selected option for create journal entries as default AllDay
 	 * @return JSONResponse
 	 */
 	private function setDefaultJournalEntryAllDay(string $value):JSONResponse {

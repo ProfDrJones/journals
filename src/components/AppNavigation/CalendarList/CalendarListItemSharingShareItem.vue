@@ -33,7 +33,7 @@
 				:disabled="updatingSharee"
 				:checked="sharee.writeable"
 				@update:checked="updatePermission">
-				{{ $t('calendar', 'can edit') }}
+				{{ $t('journals', 'can edit') }}
 			</ActionCheckbox>
 		</template>
 
@@ -42,7 +42,7 @@
 				icon="icon-delete"
 				:disabled="updatingSharee"
 				@click.prevent.stop="unshare">
-				{{ $t('calendar', 'Unshare with {displayName}', { displayName: sharee.displayName }) }}
+				{{ $t('journals', 'Unshare with {displayName}', { displayName: sharee.displayName }) }}
 			</ActionButton>
 		</template>
 	</AppNavigationItem>
@@ -98,7 +98,7 @@ export default {
 				this.updatingSharee = false
 			} catch (error) {
 				console.error(error)
-				this.$toast(this.$t('calendar', 'An error occurred, unable to change the unshare the calendar.'))
+				this.$toast(this.$t('journals', 'An error occurred, unable to change the unshare the calendar.'))
 
 				this.updatingSharee = false
 			}
@@ -118,7 +118,7 @@ export default {
 				this.updatingSharee = false
 			} catch (error) {
 				console.error(error)
-				this.$toast(this.$t('calendar', 'An error occurred, unable to change the permission of the share.'))
+				this.$toast(this.$t('journals', 'An error occurred, unable to change the permission of the share.'))
 
 				this.updatingSharee = false
 			}

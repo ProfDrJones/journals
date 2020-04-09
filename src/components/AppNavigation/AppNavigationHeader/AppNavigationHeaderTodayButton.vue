@@ -26,7 +26,7 @@
 		class="button today"
 		:title="title"
 		@click="today()">
-		{{ $t('calendar', 'Today') }}
+		{{ $t('journals', 'Today') }}
 	</button>
 </template>
 

@@ -54,7 +54,7 @@ const router = new Router({
 			components: {
 				default: Timeline,
 				sideBar: CalendarSidebar,
-			  },
+			},
 		},
 		{
 			path: '/journal/:firstDay',
@@ -62,14 +62,14 @@ const router = new Router({
 			components: {
 				default: Journal,
 				sideBar: CalendarSidebar,
-			  },
+			},
 		},
 		{
 			path: '/calendar/:firstDay',
 			name: 'CalendarView',
 			components: {
 				default: Calendar,
-			  },
+			},
 		},
 
 		{
