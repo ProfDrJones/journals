@@ -100,3 +100,7 @@ css/public
 
 ### Visual Studio Code ###
 .vscode/*
+
+### translation files ###
+translationtool.phar
+translationfiles/*
