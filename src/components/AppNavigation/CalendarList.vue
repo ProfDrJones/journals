@@ -29,23 +29,42 @@
 <template>
 	<transition-group
 		id="calendars-list"
+		key="calendars-list"
 		name="list"
 		tag="ul">
-		<CalendarListItemLoadingPlaceholder v-if="loadingCalendars" :key="loadingKeyCalendars" />
-		<AppNavigationCaption :key="journalsCaptionKey" :title="journalsTitle" />
-		<CalendarListItem
-			v-for="calendar in journalCalendars"
-			:key="calendar.id"
-			:calendar="calendar" />
-		<CalendarListNew
-			v-if="!loadingCalendars"
-			:key="newCalendarKey"
-			:disabled="loadingCalendars" />
-		<AppNavigationCaption :key="nonJournalsCaptionKey" :title="nonJournalsTitle" />
-		<CalendarListItem
-			v-for="calendar in nonJournalCalendars"
-			:key="calendar.id"
-			:calendar="calendar" />
+		<AppNavigationItem
+			:key="categoryCaptionKey"
+			:title="categoryTitle"
+			:allow-collapse="true"
+			:open="false">
+			<li />
+		</AppNavigationItem>
+		<AppNavigationItem
+			:key="journalsCaptionKey"
+			:title="journalsTitle"
+			:allow-collapse="true"
+			:open="true">
+			<CalendarListItem
+				v-for="calendar in journalCalendars"
+				:key="calendar.id"
+				:calendar="calendar" />
+			<CalendarListNew
+				v-if="!loadingCalendars"
+				:key="newCalendarKey"
+				:disabled="loadingCalendars" />
+			<CalendarListItemLoadingPlaceholder v-if="loadingCalendars" :key="loadingKeyJournals" />
+		</AppNavigationItem>
+		<AppNavigationItem
+			:key="nonJournalsCaptionKey"
+			:title="nonJournalsTitle"
+			:allow-collapse="true"
+			:open="true">
+			<CalendarListItem
+				v-for="calendar in nonJournalCalendars"
+				:key="calendar.id"
+				:calendar="calendar" />
+			<CalendarListItemLoadingPlaceholder v-if="loadingCalendars" :key="loadingKeyCalendars" />
+		</AppNavigationItem>
 	</transition-group>
 </template>
 
@@ -53,7 +72,7 @@
 import {
 	mapGetters,
 } from 'vuex'
-import AppNavigationCaption from '@nextcloud/vue/dist/Components/AppNavigationCaption'
+import AppNavigationItem from '@nextcloud/vue/dist/Components/AppNavigationItem'
 import CalendarListNew from './CalendarList/CalendarListNew.vue'
 import CalendarListItem from './CalendarList/CalendarListItem.vue'
 import CalendarListItemLoadingPlaceholder from './CalendarList/CalendarListItemLoadingPlaceholder.vue'
@@ -61,7 +80,7 @@ import CalendarListItemLoadingPlaceholder from './CalendarList/CalendarListItemL
 export default {
 	name: 'CalendarList',
 	components: {
-		AppNavigationCaption,
+		AppNavigationItem,
 		CalendarListNew,
 		CalendarListItem,
 		CalendarListItemLoadingPlaceholder,
@@ -82,20 +101,29 @@ export default {
 		newCalendarKey() {
 			return this._uid + '-new-calendar'
 		},
+		loadingKeyJournals() {
+			return this._uid + '-loading-placeholder-journals'
+		},
 		loadingKeyCalendars() {
 			return this._uid + '-loading-placeholder-calendars'
 		},
-		journalsCaptionKey() {
-			return this._uid + '-journalCaption'
+		categoryTitle() {
+			return this.$t('journals', 'Categories')
 		},
-		nonJournalsCaptionKey() {
-			return this._uid + '-nonJournalCaption'
+		categoryCaptionKey() {
+			return this._uid + '-categoryCaption'
 		},
 		journalsTitle() {
 			return this.$t('journals', 'Journals')
 		},
+		journalsCaptionKey() {
+			return this._uid + '-journalCaption'
+		},
 		nonJournalsTitle() {
 			return this.$t('journals', 'Other Calendars')
+		},
+		nonJournalsCaptionKey() {
+			return this._uid + '-nonJournalCaption'
 		},
 	},
 }

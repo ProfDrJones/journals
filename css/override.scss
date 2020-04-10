@@ -1,9 +1,9 @@
 /**
- * Calendar App
+ * Calendar Journals
  *
- * @copyright 2019 Georg Ehrke <oc.list@georgehrke.com>
+ * @copyright 2020 Johannes Szeibert <johannes@szeibert.de>
  *
- * @author Georg Ehrke
+ * @author Johannes Szeibert
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU AFFERO GENERAL PUBLIC LICENSE
@@ -19,14 +19,8 @@
  * License along with this library.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
-@import 'override.scss';
-@import 'app-navigation.scss';
-@import 'app-sidebar.scss';
-@import 'app-settings.scss';
-@import 'freebusy.scss';
-@import 'fullcalendar.scss';
-@import 'global.scss';
-@import 'icons.scss';
-@import 'print.scss';
-@import 'timeline.scss';
+ #calendars-list > .app-navigation-entry--collapsible > .app-navigation-entry-link > .app-navigation-entry__title {
+	font-weight: bold;
+	color: var(--color-text-maxcontrast);
+	opacity: 0.7;
+}
