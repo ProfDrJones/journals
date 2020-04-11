@@ -44,9 +44,12 @@
 			@click.prevent.stop="toggleEnabled" />
 
 		<template v-if="!deleteTimeout" slot="counter">
+			<!-- default Calendar  with Journals support -->
 			<Actions v-if="supportsJournals" @click="setDefaultCalendar">
 				<ActionButton :icon="starIconClass" />
 			</Actions>
+
+			<!-- sharing of Calendars without Journals support must be done in the calendars app -->
 			<Actions v-if="showSharingIcon" :disabled="!supportsJournals">
 				<ActionButton :icon="sharingIconClass" @click="toggleShareMenu" />
 			</Actions>
@@ -54,6 +57,8 @@
 			<div v-if="isSharedWithMe && !loadedOwnerPrincipal" class="icon icon-loading" />
 		</template>
 
+		<!-- editing/deleting calendars is only allowed for calendars that exclusively support Journals
+			we don't want users to delete there events, ... by accident -->
 		<template v-if="!deleteTimeout && supportsOnlyJournals" slot="actions">
 			<ActionButton
 				v-if="showRenameLabel"
@@ -107,34 +112,25 @@
 				@click.prevent.stop="deleteCalendar">
 				{{ $t('journals', 'Unshare from me') }}
 			</ActionButton>
+
+			<!-- Only pure Journal calendars can be deleted within the Journals app.
+				Deletion of other calendars must be done within the calendars app -->
 			<ActionButton
-				v-if="!calendar.isSharedWithMe"
+				v-if="!calendar.isSharedWithMe && calendar.supportsOnlyJournals"
 				icon="icon-delete"
 				@click.prevent.stop="deleteCalendar">
 				{{ $t('journals', 'Delete') }}
 			</ActionButton>
 		</template>
 
+		<!-- calendars that support more vObjects than Journal can only be unshared
+			we don't want users to delete there events,... by accident -->
 		<template v-if="!!deleteTimeout && supportsJournals" slot="actions">
 			<ActionButton
 				v-if="calendar.isSharedWithMe"
 				icon="icon-history"
 				@click.prevent.stop="cancelDeleteCalendar">
 				{{ $n('journals', 'Unsharing the calendar in {countdown} second', 'Unsharing the calendar in {countdown} seconds', countdown, { countdown }) }}
-			</ActionButton>
-			<ActionButton
-				v-if="!calendar.isSharedWithMe"
-				icon="icon-history"
-				@click.prevent.stop="cancelDeleteCalendar">
-				{{ $n('journals', 'Deleting the calendar in {countdown} second', 'Deleting the calendar in {countdown} seconds', countdown, { countdown }) }}
-			</ActionButton>
-		</template>
-
-		<template v-if="!supportsJournals && !isSharedWithMe" slot="actions">
-			<ActionButton
-				icon="icon-add"
-				@click.prevent.stop="addJournalSupport">
-				{{ $t('journals', 'Add to Journals') }}
 			</ActionButton>
 		</template>
 
@@ -227,7 +223,7 @@ export default {
 		 * @returns {Boolean}
 		 */
 		showSharingIcon() {
-			return (this.addJournalSupport && this.calendar.canBeShared) || this.isPublished || this.isShared
+			return (this.supportsJournals && this.calendar.canBeShared) || this.isPublished || this.isShared
 		},
 		/**
 		 * The sharing icon class.
@@ -250,7 +246,7 @@ export default {
 		},
 
 		starIconClass() {
-			if (this.calendar.id === 'DDiary') {
+			if (this.isDefault) {
 				return 'icon-stared'
 			}
 			return 'icon-star'
@@ -355,7 +351,7 @@ export default {
 		toggleEnabled() {
 			this.$store.dispatch('toggleCalendarEnabled', { calendar: this.calendar })
 				.catch((error) => {
-					this.$toast.error(this.$t('journals', 'An error occurred, unable to change visibility of the calendar.'))
+					this.$toast.error(this.$t('journals', 'An error occurred, unable to change visibility of the calendar or journal.'))
 					console.error(error)
 				})
 		},
@@ -388,6 +384,41 @@ export default {
 		 * Cancels the deletion of a calendar
 		 */
 		cancelDeleteCalendar() {
+			clearTimeout(this.deleteTimeout)
+			clearInterval(this.deleteInterval)
+			this.deleteTimeout = null
+			this.deleteInterval = null
+			this.countdown = 7
+		},
+		/**
+		 * Deletes or unshares the calendar
+		 */
+		removeJournalSupport() {
+			this.deleteInterval = setInterval(() => {
+				this.countdown--
+
+				if (this.countdown < 0) {
+					this.countdown = 0
+				}
+			}, 1000)
+			this.deleteTimeout = setTimeout(async() => {
+				try {
+					await this.$store.dispatch('removeJournalSupport', { calendar: this.calendar })
+				} catch (error) {
+					this.$toast.error(this.$t('journals', 'An error occurred, unable to remove the journal support.'))
+					console.error(error)
+				} finally {
+					clearInterval(this.deleteInterval)
+					this.deleteTimeout = null
+					this.deleteInterval = null
+					this.countdown = 7
+				}
+			}, 7000)
+		},
+		/**
+		 * Cancels the deletion of a calendar
+		 */
+		cancelRemoveJournalSupport() {
 			clearTimeout(this.deleteTimeout)
 			clearInterval(this.deleteInterval)
 			this.deleteTimeout = null
@@ -430,13 +461,6 @@ export default {
 		 */
 		setDefaultCalendar() {
 			console.debug('toggled default Journal')
-		},
-
-		/**
-		 * Adds VJOURNAL Support to an existing calendar
-		 */
-		addJournalSupport() {
-			console.debug('toggled addJournalSupport')
 		},
 		/**
 		 * Copies the private calendar link
