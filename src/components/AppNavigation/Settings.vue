@@ -23,14 +23,12 @@
 	<AppNavigationSettings>
 		<ul class="settings-fieldset-interior">
 			<ActionCheckbox
-				:is-disabled="loadingCalendars"
 				class="settings-fieldset-interior-item"
 				:checked="defaultJournalEntryAllDay"
 				:disabled="savingDefaultJournalEntryAllDay"
 				@update:checked="toggleDefaultJournalEntryAllDayEnabled">
 				{{ $t('journals', 'Default Journal Entries as AllDay') }}
 			</ActionCheckbox>
-			<SettingsDefaultJournalSelect :is-disabled="loadingCalendars" />
 			<SettingsTimezoneSelect :is-disabled="loadingCalendars" />
 		</ul>
 	</AppNavigationSettings>
@@ -39,8 +37,6 @@
 <script>
 import ActionCheckbox from '@nextcloud/vue/dist/Components/ActionCheckbox'
 import AppNavigationSettings from '@nextcloud/vue/dist/Components/AppNavigationSettings'
-
-import SettingsDefaultJournalSelect from './Settings/SettingsDefaultJournalSelect.vue'
 import SettingsTimezoneSelect from './Settings/SettingsTimezoneSelect.vue'
 
 import {
@@ -52,7 +48,6 @@ export default {
 	components: {
 		ActionCheckbox,
 		AppNavigationSettings,
-		SettingsDefaultJournalSelect,
 		SettingsTimezoneSelect,
 	},
 	props: {
@@ -69,6 +64,7 @@ export default {
 	computed: {
 		...mapState({
 			defaultJournalEntryAllDay: state => !state.settings.defaultJournalEntryAllDay,
+			timezone: state => state.settings.timezone,
 		}),
 	},
 	methods: {

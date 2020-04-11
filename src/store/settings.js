@@ -52,7 +52,7 @@ const mutations = {
 	 *
 	 * @param {Object} state The Vuex state
 	 */
-	toggleDefaultJournalEntryAllDay(state) {
+	toggleDefaultJournalEntryAllDayEnabled(state) {
 		state.defaultJournalEntryAllDay = !state.defaultJournalEntryAllDay
 	},
 
@@ -167,15 +167,13 @@ const actions = {
 	 * @param {String} data.timezoneId The new dalendarId
 	 * @returns {Promise<void>}
 	 */
-	async setDefaultJournal(context, { calendarId }) {
-		if (context.state.defaultJournal === calendarId) {
+	async setDefaultJournal(context, { value }) {
+		if (context.state.defaultJournal === value) {
 			return
 		}
 
-		await HttpClient.post(getLinkToConfig('defaultJournal'), {
-			value: calendarId,
-		})
-		context.commit('setDefaultJournal', { calendarId })
+		await HttpClient.post(getLinkToConfig('defaultJournal'), { value })
+		context.commit('setDefaultJournal', { value })
 	},
 
 	/**

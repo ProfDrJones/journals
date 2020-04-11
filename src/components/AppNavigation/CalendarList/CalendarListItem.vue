@@ -45,9 +45,11 @@
 
 		<template v-if="!deleteTimeout" slot="counter">
 			<!-- default Calendar  with Journals support -->
-			<Actions v-if="supportsJournals" @click="setDefaultCalendar">
-				<ActionButton :icon="starIconClass" />
-			</Actions>
+			<ActionButton
+				v-if="supportsJournals"
+				:icon="starIconClass"
+				:disabled="isDefaultJournal"
+				@click="setDefaultJournal" />
 
 			<!-- sharing of Calendars without Journals support must be done in the calendars app -->
 			<Actions v-if="showSharingIcon" :disabled="!supportsJournals">
@@ -165,6 +167,10 @@ import AppNavigationDisabledCalendarIconBullet from './AppNavigationDisabledCale
 import CalendarListItemSharingSearch from './CalendarListItemSharingSearch.vue'
 import CalendarListItemSharingShareItem from './CalendarListItemSharingShareItem.vue'
 
+import {
+	mapState,
+} from 'vuex'
+
 export default {
 	name: 'CalendarListItem',
 	components: {
@@ -208,6 +214,11 @@ export default {
 		}
 	},
 	computed: {
+
+		...mapState({
+			defaultJournal: state => state.settings.defaultJournal,
+		}),
+
 		/**
 		 * Download url of the calendar
 		 *
@@ -246,8 +257,8 @@ export default {
 		},
 
 		starIconClass() {
-			if (this.isDefault) {
-				return 'icon-stared'
+			if (this.isDefaultJournal) {
+				return 'icon-starred'
 			}
 			return 'icon-star'
 		},
@@ -301,9 +312,13 @@ export default {
 		supportsOnlyJournals() {
 			return this.calendar.supportsOnlyJournals
 		},
-
-		isDefault() {
-			return true
+		/**
+		 * Is this the defaut calendar for new Journal Entries
+		 *
+		 * @returns {Boolean}
+		 */
+		isDefaultJournal() {
+			return this.defaultJournal === this.calendar.displayName
 		},
 
 		/**
@@ -391,41 +406,6 @@ export default {
 			this.countdown = 7
 		},
 		/**
-		 * Deletes or unshares the calendar
-		 */
-		removeJournalSupport() {
-			this.deleteInterval = setInterval(() => {
-				this.countdown--
-
-				if (this.countdown < 0) {
-					this.countdown = 0
-				}
-			}, 1000)
-			this.deleteTimeout = setTimeout(async() => {
-				try {
-					await this.$store.dispatch('removeJournalSupport', { calendar: this.calendar })
-				} catch (error) {
-					this.$toast.error(this.$t('journals', 'An error occurred, unable to remove the journal support.'))
-					console.error(error)
-				} finally {
-					clearInterval(this.deleteInterval)
-					this.deleteTimeout = null
-					this.deleteInterval = null
-					this.countdown = 7
-				}
-			}, 7000)
-		},
-		/**
-		 * Cancels the deletion of a calendar
-		 */
-		cancelRemoveJournalSupport() {
-			clearTimeout(this.deleteTimeout)
-			clearInterval(this.deleteInterval)
-			this.deleteTimeout = null
-			this.deleteInterval = null
-			this.countdown = 7
-		},
-		/**
 		 * Closes the share menu
 		 * This is used with v-click-outside
 		 *
@@ -459,8 +439,15 @@ export default {
 		/**
 		 * Selects the calendar as default for Journals
 		 */
-		setDefaultCalendar() {
-			console.debug('toggled default Journal')
+		setDefaultJournal() {
+
+			try {
+				this.$store.dispatch('setDefaultJournal', { value: this.calendar.displayName })
+				this.$toast.success(this.$t('journals', 'New setting was saved successfully.'))
+			} catch (error) {
+				console.debug(error)
+				this.$toast.error(this.$t('journals', 'New setting was not saved successfully.'))
+			}
 		},
 		/**
 		 * Copies the private calendar link

@@ -32,6 +32,7 @@ import pLimit from 'p-limit'
 import { uidToHexColor } from '../utils/color.js'
 import { translate as t } from '@nextcloud/l10n'
 import getTimezoneManager from '../services/timezoneDataProviderService.js'
+
 import Timezone from 'calendar-js/src/timezones/timezone.js'
 import CalendarComponent from 'calendar-js/src/components/calendarComponent.js'
 
@@ -240,31 +241,6 @@ const mutations = {
 		calendar = state.calendars.find(search => search.id === calendar.id)
 		const sharee = calendar.shares.find(sharee => sharee.uri === uri)
 		sharee.writeable = !sharee.writeable
-	},
-
-	/**
-	 * Publishes a calendar calendar
-	 *
-	 * @param {Object} state the store data
-	 * @param {Object} data destructuring object
-	 * @param {Object} data.calendar the calendar to publish
-	 * @param {String} data.publishURL published URL of calendar
-	 */
-	publishCalendar(state, { calendar, publishURL }) {
-		calendar = state.calendars.find(search => search.id === calendar.id)
-		calendar.publishURL = publishURL
-	},
-
-	/**
-	 * Unpublishes a calendar
-	 *
-	 * @param {Object} state the store data
-	 * @param {Object} data destructuring object
-	 * @param {Object} data.calendar the calendar to unpublish
-	 */
-	unpublishCalendar(state, { calendar }) {
-		calendar = state.calendars.find(search => search.id === calendar.id)
-		calendar.publishURL = null
 	},
 
 	/**
@@ -670,33 +646,6 @@ const actions = {
 	async unshareCalendar(context, { calendar, uri }) {
 		await calendar.dav.unshare(uri)
 		context.commit('unshareCalendar', { calendar, uri })
-	},
-
-	/**
-	 * Publish a calendar
-	 *
-	 * @param {Object} context the store mutations Current context
-	 * @param {Object} data destructuring object
-	 * @param {Object} data.calendar the calendar to change
-	 * @returns {Promise<void>}
-	 */
-	async publishCalendar(context, { calendar }) {
-		await calendar.dav.publish()
-		const publishURL = calendar.dav.publishURL
-		context.commit('publishCalendar', { calendar, publishURL })
-	},
-
-	/**
-	 * Unpublish a calendar
-	 *
-	 * @param {Object} context the store mutations Current context
-	 * @param {Object} data destructuring object
-	 * @param {Object} data.calendar the calendar to change
-	 * @returns {Promise<void>}
-	 */
-	async unpublishCalendar(context, { calendar }) {
-		await calendar.dav.unpublish()
-		context.commit('unpublishCalendar', { calendar })
 	},
 
 	/**

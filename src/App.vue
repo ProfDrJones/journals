@@ -153,12 +153,13 @@ export default {
 			return !calendar.readOnly
 		})
 
-		// No writeable calendars? Create a new one!
+		// No writeable Journals? Create a new one!
 		if (writeableCalendarIndex === -1) {
 			this.loadingCalendars = true
 			await this.$store.dispatch('appendCalendar', {
-				displayName: this.$t('journals', 'Personal'),
-				color: uidToHexColor(this.$t('journals', 'Personal')),
+				displayName: this.$t('journals', 'Private Journal'),
+				color: uidToHexColor(this.$t('journals', 'Private Journal')),
+				components: ['VJOURNAL'],
 				order: 0,
 			})
 		}

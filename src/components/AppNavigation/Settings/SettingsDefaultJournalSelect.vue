@@ -22,7 +22,7 @@
 <template>
 	<PropertyCalendarPicker
 		:calendars="calendars"
-		:calendar="defaultJournal"
+		:calendar="selectedJournal"
 		:is-read-only="false"
 		@selectCalendar="changeCalendar" />
 </template>
@@ -57,11 +57,15 @@ export default {
 		calendars() {
 			if (this.isReadOnly && this.calendarObject) {
 				return [
-					this.$store.getters.getCalendarById(this.calendarObject.calendarId),
+					this.$store.getters.getCalendarById(this.defaultJournal),
 				]
 			}
 
-			return this.$store.getters.sortedCalendars
+			return this.$store.getters.sortedJournalCalendars
+		},
+
+		selectedJournal() {
+			return this.$store.getters.getCalendarById(this.defaultJournal)
 		},
 	},
 	methods: {
