@@ -32,6 +32,7 @@
 		key="calendars-list"
 		name="list"
 		tag="ul">
+		<!-- Categories -->
 		<AppNavigationItem
 			:key="categoryCaptionKey"
 			:title="categoryTitle"
@@ -39,6 +40,8 @@
 			:open="false">
 			<li />
 		</AppNavigationItem>
+
+		<!-- Calendars with Journals support -->
 		<AppNavigationItem
 			:key="journalsCaptionKey"
 			:title="journalsTitle"
@@ -54,6 +57,8 @@
 				:disabled="loadingCalendars" />
 			<CalendarListItemLoadingPlaceholder v-if="loadingCalendars" :key="loadingKeyJournals" />
 		</AppNavigationItem>
+
+		<!-- Calendars with no Journals support -->
 		<AppNavigationItem
 			:key="nonJournalsCaptionKey"
 			:title="nonJournalsTitle"
